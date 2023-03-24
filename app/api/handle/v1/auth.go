@@ -24,6 +24,7 @@ func (h *AuthHandle) Register(ctx *gin.Context) {
 	s := services.Auth{}
 	user, err := s.Register(&req)
 	if err != nil {
+		errorx.Error(ctx, err)
 		return
 	}
 
