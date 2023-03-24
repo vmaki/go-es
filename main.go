@@ -2,17 +2,17 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"net/http"
+	"go-es/init"
 )
 
 func main() {
-	ser := gin.Default()
+	r := gin.New()
 
-	ser.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"Hello": "World!",
-		})
-	})
+	init.SetupRoute(r)
 
-	ser.Run()
+	// 运行服务
+	err := r.Run(":7001")
+	if err != nil {
+		panic("启动服务失败, err:" + err.Error())
+	}
 }
