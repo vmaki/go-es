@@ -1,0 +1,5 @@
+name: go-es
+mode: local
+port: 7001
+debug: true
+timezone: Asia/Shanghai

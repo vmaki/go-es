@@ -1,4 +1,4 @@
-package init
+package boot
 
 import (
 	"go-es/routes"
