@@ -6,7 +6,7 @@ import (
 )
 
 func SetLogger() {
-	config := config.GlobalConfig.Log
+	cf := config.GlobalConfig.Log
 
-	logger.InitLogger(config.Level, config.Type, config.Filename, config.MaxSize, config.MaxAge, config.MaxBackup, config.Compress)
+	logger.InitLogger(cf.Level, cf.Type, cf.Filename, cf.MaxSize, cf.MaxAge, cf.MaxBackup, cf.Compress)
 }

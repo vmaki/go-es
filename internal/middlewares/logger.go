@@ -13,38 +13,38 @@ import (
 )
 
 func Logger() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		w := &responseBodyWriter{body: &bytes.Buffer{}, ResponseWriter: c.Writer}
-		c.Writer = w
+	return func(ctx *gin.Context) {
+		w := &responseBodyWriter{body: &bytes.Buffer{}, ResponseWriter: ctx.Writer}
+		ctx.Writer = w
 
 		// 获取请求数据
 		var requestBody []byte
-		if c.Request.Body != nil {
+		if ctx.Request.Body != nil {
 			// c.Request.Body 是一个 buffer 对象，只能读取一次
-			requestBody, _ = io.ReadAll(c.Request.Body)
+			requestBody, _ = io.ReadAll(ctx.Request.Body)
 
 			// 读取后，重新赋值 c.Request.Body ，以供后续的其他操作
-			c.Request.Body = io.NopCloser(bytes.NewBuffer(requestBody))
+			ctx.Request.Body = io.NopCloser(bytes.NewBuffer(requestBody))
 		}
 
 		start := time.Now()
-		c.Next()
+		ctx.Next()
 
 		// 开始记录日志
 		cost := time.Since(start)
-		status := c.Writer.Status()
+		status := ctx.Writer.Status()
 
 		logFields := []zap.Field{
 			zap.Int("status", status),
-			zap.String("request", c.Request.Method+" "+c.Request.URL.String()),
-			zap.String("query", c.Request.URL.RawQuery),
-			zap.String("ip", tools.GetClientIP(c)),
-			zap.String("user-agent", c.Request.UserAgent()),
-			zap.String("errors", c.Errors.ByType(gin.ErrorTypePrivate).String()),
+			zap.String("request", ctx.Request.Method+" "+ctx.Request.URL.String()),
+			zap.String("query", ctx.Request.URL.RawQuery),
+			zap.String("ip", tools.GetClientIP(ctx)),
+			zap.String("user-agent", ctx.Request.UserAgent()),
+			zap.String("errors", ctx.Errors.ByType(gin.ErrorTypePrivate).String()),
 			zap.String("time", tools.MicrosecondsStr(cost)),
 		}
 
-		if c.Request.Method == "POST" || c.Request.Method == "PUT" || c.Request.Method == "DELETE" {
+		if ctx.Request.Method == "POST" || ctx.Request.Method == "PUT" || ctx.Request.Method == "DELETE" {
 			logFields = append(logFields, zap.String("Request Body", string(requestBody)))
 			logFields = append(logFields, zap.String("Response Body", w.body.String()))
 		}

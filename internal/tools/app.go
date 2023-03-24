@@ -12,6 +12,7 @@ func IsLocal() bool {
 
 func GetClientIP(ctx *gin.Context) string {
 	clientIP := ctx.Request.RemoteAddr
+
 	if ip := ctx.GetHeader("X-Real-IP"); ip != "" {
 		clientIP = ip
 	} else if ip = ctx.GetHeader("X-Forward-For"); ip != "" {

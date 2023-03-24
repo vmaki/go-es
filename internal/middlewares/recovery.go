@@ -14,10 +14,10 @@ import (
 )
 
 func Recovery() gin.HandlerFunc {
-	return func(c *gin.Context) {
+	return func(ctx *gin.Context) {
 		defer func() {
 			if err := recover(); err != nil {
-				httpRequest, _ := httputil.DumpRequest(c.Request, true)
+				httpRequest, _ := httputil.DumpRequest(ctx.Request, true)
 
 				// 链接中断，客户端中断连接为正常行为，不需要记录堆栈信息
 				var brokenPipe bool
@@ -32,14 +32,14 @@ func Recovery() gin.HandlerFunc {
 
 				// 链接中断的情况
 				if brokenPipe {
-					logger.Error(c.Request.URL.Path,
+					logger.Error(ctx.Request.URL.Path,
 						zap.Time("time", time.Now()),
 						zap.Any("error", err),
 						zap.String("request", string(httpRequest)),
 					)
 
-					c.Error(err.(error))
-					c.Abort()
+					ctx.Error(err.(error))
+					ctx.Abort()
 
 					// 链接已断开，无法写状态码
 					return
@@ -54,12 +54,13 @@ func Recovery() gin.HandlerFunc {
 				)
 
 				// 返回 500 状态码
-				c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+				ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 					"code": 500,
 					"msg":  "服务器内部错误，请稍后再试",
 				})
 			}
 		}()
-		c.Next()
+
+		ctx.Next()
 	}
 }
