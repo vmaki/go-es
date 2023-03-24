@@ -4,18 +4,18 @@ import (
 	"sync"
 )
 
-type Service struct {
+type CacheService struct {
 	Store IStore
 }
 
 var (
 	once  sync.Once
-	Cache *Service
+	Cache *CacheService
 )
 
 func NewService(store IStore) {
 	once.Do(func() {
-		Cache = &Service{
+		Cache = &CacheService{
 			Store: store,
 		}
 	})

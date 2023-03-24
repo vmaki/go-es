@@ -23,7 +23,7 @@ func (s *RedisStore) Set(key string, value interface{}, expireTime int64) {
 }
 
 func (s *RedisStore) Get(key string) string {
-	return s.RedisClient.Get(key)
+	return s.RedisClient.Get(s.KeyPrefix + key)
 }
 
 func (s *RedisStore) Has(key string) bool {
@@ -31,21 +31,21 @@ func (s *RedisStore) Has(key string) bool {
 }
 
 func (s *RedisStore) Incr(key string) bool {
-	return s.RedisClient.Incr(key)
+	return s.RedisClient.Incr(s.KeyPrefix + key)
 }
 
 func (s *RedisStore) IncrBy(key string, value int64) bool {
-	return s.RedisClient.Incr(key)
+	return s.RedisClient.IncrBy(s.KeyPrefix+key, value)
 }
 
 func (s *RedisStore) Decr(key string) bool {
-	return s.RedisClient.Decr(key)
+	return s.RedisClient.Decr(s.KeyPrefix + key)
 }
 
 func (s *RedisStore) DecrBy(key string, value int64) bool {
-	return s.RedisClient.DecrBy(key, value)
+	return s.RedisClient.DecrBy(s.KeyPrefix+key, value)
 }
 
 func (s *RedisStore) Del(key string) bool {
-	return s.RedisClient.Del(key)
+	return s.RedisClient.Del(s.KeyPrefix + key)
 }
