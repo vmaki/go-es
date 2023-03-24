@@ -32,6 +32,7 @@ func RegisterAPIRoutes(r *gin.Engine) {
 
 			testGroup.GET("/", handle.Index)
 			testGroup.GET("/500", handle.SysErr)
+			testGroup.GET("/job", handle.Job)
 		}
 	}
 }
