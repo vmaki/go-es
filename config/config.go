@@ -10,4 +10,5 @@ type Config struct {
 	Timezone string
 	Log      LogConfig
 	DataBase DataBaseConfig
+	JWT      JWTConfig
 }

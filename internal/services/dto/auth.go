@@ -30,7 +30,9 @@ func (s *AuthRegisterReq) Generate(data interface{}) error {
 }
 
 type AuthRegisterResp struct {
-	Token string `json:"token"`
+	AccessToken  string `json:"access_token"`
+	AccessExpire int64  `json:"access_expire"`
+	RefreshAfter int64  `json:"refresh_after"`
 }
 
 type AuthLoginReq struct {
@@ -58,5 +60,7 @@ func (s *AuthLoginReq) Generate(data interface{}) error {
 }
 
 type AuthLoginResp struct {
-	Token string `json:"token"`
+	AccessToken  string `json:"access_token"`
+	AccessExpire int64  `json:"access_expire"`
+	RefreshAfter int64  `json:"refresh_after"`
 }

@@ -6,6 +6,7 @@ import (
 	"go-es/common/encryption"
 	"go-es/common/errorx"
 	"go-es/config"
+	"go-es/internal/pkg/jwt"
 	"go-es/internal/services/dto"
 )
 
@@ -29,8 +30,13 @@ func (s *Auth) Register(req *dto.AuthRegisterReq) (*dto.AuthRegisterResp, error)
 		return nil, errorx.NewResponse(500, "注册失败", nil)
 	}
 
-	token := "1234567890" // todo jwt-token
-	return &dto.AuthRegisterResp{Token: token}, nil
+	token, expireTime := jwt.NewJWT().GenerateToken(data.ID)
+
+	return &dto.AuthRegisterResp{
+		AccessToken:  token,
+		AccessExpire: expireTime,
+		RefreshAfter: expireTime / 2,
+	}, nil
 }
 
 // Login  登录
@@ -44,6 +50,11 @@ func (s *Auth) Login(req *dto.AuthLoginReq) (*dto.AuthLoginResp, error) {
 		return nil, errorx.NewResponse(4004, "账户或密码错误", nil)
 	}
 
-	token := data.Nickname + "0987654321"
-	return &dto.AuthLoginResp{Token: token}, nil
+	token, expireTime := jwt.NewJWT().GenerateToken(data.ID)
+
+	return &dto.AuthLoginResp{
+		AccessToken:  token,
+		AccessExpire: expireTime,
+		RefreshAfter: expireTime / 2,
+	}, nil
 }

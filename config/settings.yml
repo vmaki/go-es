@@ -22,3 +22,7 @@ database:
   maxOpenConnections: 100
   maxIdleConnections: 25
   maxLifeSeconds: 300
+jwt:
+  secret: zBqYyQrPNaIUsnRhsGtHLivjqiMjBVLS
+  expireTime: 3600
+  maxRefreshTime: 86400

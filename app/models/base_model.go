@@ -5,7 +5,7 @@ import (
 )
 
 type BaseModel struct {
-	ID uint64 `gorm:"column:id;primaryKey;autoIncrement;" json:"id,omitempty"`
+	ID int64 `gorm:"column:id;primaryKey;autoIncrement;" json:"id,omitempty"`
 }
 
 type CommonTimestampsField struct {
