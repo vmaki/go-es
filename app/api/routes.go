@@ -8,6 +8,12 @@ import (
 func RegisterAPIRoutes(r *gin.Engine) {
 	apiV1 := r.Group("/v1")
 	{
+		authGroup := apiV1.Group("/auth")
+		{
+			handle := new(v1.AuthHandle)
+
+			authGroup.POST("/register", handle.Register)
+		}
 
 		// 测试接口
 		testGroup := apiV1.Group("/test")

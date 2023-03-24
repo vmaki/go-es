@@ -13,6 +13,16 @@ func Success(ctx *gin.Context, data interface{}) {
 	JSON(ctx, NewResponse(200, "success", data))
 }
 
+// Error 自定义错误
+func Error(ctx *gin.Context, err error) {
+	switch e := err.(type) {
+	case *Response:
+		JSON(ctx, e)
+	default:
+		SysError(ctx)
+	}
+}
+
 func Failure(ctx *gin.Context, status int, data *Response) {
 	ctx.AbortWithStatusJSON(status, data)
 }
