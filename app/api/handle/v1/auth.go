@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"go-es/app/api/handle"
 	"go-es/common/errorx"
@@ -22,14 +21,11 @@ func (h *AuthHandle) Register(ctx *gin.Context) {
 	}
 
 	s := services.Auth{}
-	user, err := s.Register(&req)
+	data, err := s.Register(&req)
 	if err != nil {
 		errorx.Error(ctx, err)
 		return
 	}
 
-	// todo jwt
-	fmt.Println("user id", user.ID)
-
-	errorx.Success(ctx, nil)
+	errorx.Success(ctx, data)
 }
