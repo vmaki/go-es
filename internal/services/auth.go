@@ -32,3 +32,18 @@ func (s *Auth) Register(req *dto.AuthRegisterReq) (*dto.AuthRegisterResp, error)
 	token := "1234567890" // todo jwt-token
 	return &dto.AuthRegisterResp{Token: token}, nil
 }
+
+// Login  登录
+func (s *Auth) Login(req *dto.AuthLoginReq) (*dto.AuthLoginResp, error) {
+	data := user.GetByPhone(req.Phone)
+	if data == nil {
+		return nil, errorx.NewResponse(4003, "用户尚未注册", nil)
+	}
+
+	if data.Password != encryption.Md5(req.Password, config.GlobalConfig.Name) {
+		return nil, errorx.NewResponse(4004, "账户或密码错误", nil)
+	}
+
+	token := data.Nickname + "0987654321"
+	return &dto.AuthLoginResp{Token: token}, nil
+}

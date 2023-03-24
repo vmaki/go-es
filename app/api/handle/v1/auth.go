@@ -29,3 +29,20 @@ func (h *AuthHandle) Register(ctx *gin.Context) {
 
 	errorx.Success(ctx, data)
 }
+
+func (h *AuthHandle) Login(ctx *gin.Context) {
+	req := dto.AuthLoginReq{}
+	if err := requestx.Validate(ctx, &req); err != nil {
+		errorx.Error(ctx, err)
+		return
+	}
+
+	s := services.Auth{}
+	data, err := s.Login(&req)
+	if err != nil {
+		errorx.Error(ctx, err)
+		return
+	}
+
+	errorx.Success(ctx, data)
+}

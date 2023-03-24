@@ -13,6 +13,7 @@ func RegisterAPIRoutes(r *gin.Engine) {
 			handle := new(v1.AuthHandle)
 
 			authGroup.POST("/register", handle.Register)
+			authGroup.POST("/login", handle.Login)
 		}
 
 		// 测试接口

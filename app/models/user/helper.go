@@ -8,3 +8,8 @@ func IsPhoneExist(phone string) bool {
 
 	return count > 0
 }
+
+func GetByPhone(phone string) (userModel *User) {
+	database.GlobalDB.Where("phone = ?", phone).First(&userModel)
+	return
+}
