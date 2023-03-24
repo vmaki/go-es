@@ -7,7 +7,7 @@ import (
 )
 
 func RegisterAPIRoutes(r *gin.Engine) {
-	apiV1 := r.Group("/v1", middlewares.LimitIP("200-H"))
+	apiV1 := r.Group("/api/v1", middlewares.LimitIP("200-H"))
 	{
 		authGroup := apiV1.Group("/auth", middlewares.LimitPerRoute("5-H"))
 		{

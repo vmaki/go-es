@@ -1,17 +1,20 @@
 package boot
 
 import (
+	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"go-es/app/api"
 	"go-es/common/responsex"
+	_ "go-es/docs"
 	"go-es/internal/middlewares"
 	"net/http"
 	"strings"
-
-	"github.com/gin-gonic/gin"
 )
 
 func SetupRoute(router *gin.Engine) {
 	registerGlobalMiddleWare(router)
+	registerSwagger(router)
 
 	//  注册 API 路由
 	api.RegisterAPIRoutes(router)
@@ -25,6 +28,10 @@ func registerGlobalMiddleWare(router *gin.Engine) {
 		middlewares.Logger(),
 		middlewares.Recovery(),
 	)
+}
+
+func registerSwagger(router *gin.Engine) {
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 }
 
 // setup404Handler 404路由处理器

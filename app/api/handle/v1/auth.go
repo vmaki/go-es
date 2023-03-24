@@ -14,6 +14,14 @@ type AuthHandle struct {
 	handle.BaseAPIController
 }
 
+// Register
+// @Tags      Auth
+// @Summary   注册
+// @accept    application/json
+// @Produce   application/json
+// @Param     data  body      dto.AuthRegisterReq true "手机, 密码"
+// @Success   200   {object}  responsex.Response{data=dto.AuthRegisterResp} "jwt-token, 过期时间"
+// @Router    /auth/register [post]
 func (h *AuthHandle) Register(ctx *gin.Context) {
 	req := dto.AuthRegisterReq{}
 	if err := requestx.Validate(ctx, &req); err != nil {
@@ -31,6 +39,14 @@ func (h *AuthHandle) Register(ctx *gin.Context) {
 	responsex.Success(ctx, data)
 }
 
+// Login
+// @Tags      Auth
+// @Summary   登录
+// @accept    application/json
+// @Produce   application/json
+// @Param     data  body      dto.AuthLoginReq true  "手机, 密码"
+// @Success   200   {object}  responsex.Response{data=dto.AuthLoginResp}  "jwt-token, 过期时间"
+// @Router    /auth/login [post]
 func (h *AuthHandle) Login(ctx *gin.Context) {
 	req := dto.AuthLoginReq{}
 	if err := requestx.Validate(ctx, &req); err != nil {
@@ -48,6 +64,14 @@ func (h *AuthHandle) Login(ctx *gin.Context) {
 	responsex.Success(ctx, data)
 }
 
+// RefreshToken
+// @Tags      Auth
+// @Summary   刷新 token
+// @Security  ApiKeyAuth
+// @accept    application/json
+// @Produce   application/json
+// @Success   200   {object}  responsex.Response{data=dto.AuthRefreshTokenResp}  "jwt-token, 过期时间"
+// @Router    /auth/refresh-token [post]
 func (h *AuthHandle) RefreshToken(ctx *gin.Context) {
 	token, expire, err := jwt.NewJWT().RefreshToken(ctx)
 	if err != nil {

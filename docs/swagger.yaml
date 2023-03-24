@@ -1,0 +1,142 @@
+basePath: /
+definitions:
+  dto.AuthLoginReq:
+    properties:
+      password:
+        description: 密码
+        type: string
+      phone:
+        description: 手机号码
+        type: string
+    type: object
+  dto.AuthLoginResp:
+    properties:
+      access_expire:
+        description: 过期时间
+        type: integer
+      access_token:
+        description: jwt-token
+        type: string
+    type: object
+  dto.AuthRefreshTokenResp:
+    properties:
+      access_expire:
+        description: 过期时间
+        type: integer
+      access_token:
+        description: jwt-token
+        type: string
+    type: object
+  dto.AuthRegisterReq:
+    properties:
+      password:
+        description: 密码
+        type: string
+      phone:
+        description: 手机号码
+        type: string
+    type: object
+  dto.AuthRegisterResp:
+    properties:
+      access_expire:
+        description: 过期时间
+        type: integer
+      access_token:
+        description: jwt-token
+        type: string
+    type: object
+  responsex.Response:
+    properties:
+      code:
+        type: integer
+      data: { }
+      msg:
+        type: string
+    type: object
+externalDocs:
+  description: OpenAPI
+  url: https://swagger.io/resources/open-api/
+host: localhost:7001/api/v1
+info:
+  contact: { }
+  description: 这是 go-es 的 API 文档
+  title: go-es 的 API 文档
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      consumes:
+        - application/json
+      parameters:
+        - description: 手机, 密码
+          in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/dto.AuthLoginReq'
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: jwt-token, 过期时间
+          schema:
+            allOf:
+              - $ref: '#/definitions/responsex.Response'
+              - properties:
+                  data:
+                    $ref: '#/definitions/dto.AuthLoginResp'
+                type: object
+      summary: 登录
+      tags:
+        - Auth
+  /auth/refresh-token:
+    post:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: jwt-token, 过期时间
+          schema:
+            allOf:
+              - $ref: '#/definitions/responsex.Response'
+              - properties:
+                  data:
+                    $ref: '#/definitions/dto.AuthRefreshTokenResp'
+                type: object
+      security:
+        - ApiKeyAuth: [ ]
+      summary: 刷新 token
+      tags:
+        - Auth
+  /auth/register:
+    post:
+      consumes:
+        - application/json
+      parameters:
+        - description: 手机, 密码
+          in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/dto.AuthRegisterReq'
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: jwt-token, 过期时间
+          schema:
+            allOf:
+              - $ref: '#/definitions/responsex.Response'
+              - properties:
+                  data:
+                    $ref: '#/definitions/dto.AuthRegisterResp'
+                type: object
+      summary: 注册
+      tags:
+        - Auth
+securityDefinitions:
+  BasicAuth:
+    type: basic
+swagger: "2.0"

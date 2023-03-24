@@ -30,8 +30,8 @@ func (s *AuthRegisterReq) Generate(data interface{}) error {
 }
 
 type AuthRegisterResp struct {
-	AccessToken  string `json:"access_token"`
-	AccessExpire int64  `json:"access_expire"`
+	AccessToken  string `json:"access_token"`  // jwt-token
+	AccessExpire int64  `json:"access_expire"` // 过期时间
 }
 
 type AuthLoginReq struct {
@@ -59,11 +59,11 @@ func (s *AuthLoginReq) Generate(data interface{}) error {
 }
 
 type AuthLoginResp struct {
-	AccessToken  string `json:"access_token"`
-	AccessExpire int64  `json:"access_expire"`
+	AccessToken  string `json:"access_token"`  // jwt-token
+	AccessExpire int64  `json:"access_expire"` // 过期时间
 }
 
 type AuthRefreshTokenResp struct {
-	AccessToken  string `json:"access_token"`
-	AccessExpire int64  `json:"access_expire"`
+	AccessToken  string `json:"access_token"`  // jwt-token
+	AccessExpire int64  `json:"access_expire"` // 过期时间
 }

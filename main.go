@@ -32,6 +32,17 @@ func init() {
 	boot.SetupAsynq()
 }
 
+// @title           go-es 的 API 文档
+// @version         1.0
+// @description     这是 go-es 的 API 文档
+
+// @host      localhost:7001/api/v1
+// @BasePath  /
+
+// @securityDefinitions.basic  BasicAuth
+
+// @externalDocs.description  OpenAPI
+// @externalDocs.url          https://swagger.io/resources/open-api/
 func main() {
 	gin.SetMode(gin.ReleaseMode)
 
