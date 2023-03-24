@@ -5,6 +5,7 @@ import (
 	"flag"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cast"
+	"go-es/app/cronx"
 	"go-es/app/mqueue"
 	"go-es/boot"
 	"go-es/config"
@@ -49,12 +50,19 @@ func main() {
 		}
 	}()
 
-	// 任务
+	// 延迟任务
 	go func() {
 		tasks := mqueue.NewMQueue(context.Background()).Register()
 		if err := asynq.Srv.Run(tasks); err != nil {
 			logger.ErrorString("CMD", "serve", err.Error())
 		}
+	}()
+
+	// 定时任务
+	go func() {
+		c := cronx.NewCron()
+		c.Register()
+		c.Start()
 	}()
 
 	quit := make(chan os.Signal, 1)

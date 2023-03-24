@@ -8,6 +8,7 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/hibiken/asynq v0.24.0
 	github.com/redis/go-redis/v9 v9.0.2
+	github.com/robfig/cron v1.2.0
 	github.com/spf13/cast v1.5.0
 	github.com/spf13/viper v1.15.0
 	github.com/thedevsaddam/govalidator v1.9.10
