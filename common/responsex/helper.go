@@ -1,4 +1,4 @@
-package errorx
+package responsex
 
 import (
 	"github.com/gin-gonic/gin"

@@ -1,4 +1,4 @@
-package errorx
+package responsex
 
 type Response struct {
 	Code int         `json:"code"`

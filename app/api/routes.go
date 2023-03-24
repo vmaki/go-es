@@ -15,6 +15,7 @@ func RegisterAPIRoutes(r *gin.Engine) {
 
 			authGroup.POST("/register", handle.Register)
 			authGroup.POST("/login", handle.Login)
+			authGroup.POST("/refresh-token", middlewares.AuthJWT(), handle.RefreshToken)
 		}
 
 		userGroup := apiV1.Group("/user", middlewares.AuthJWT())

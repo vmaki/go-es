@@ -12,11 +12,13 @@ import (
 )
 
 var (
-	ErrTokenExpired    = errors.New("4101-令牌已过期")
-	ErrTokenMalformed  = errors.New("4102-请求令牌格式有误")
-	ErrTokenInvalid    = errors.New("4103-请求令牌无效")
-	ErrHeaderEmpty     = errors.New("4104-需要认证才能访问！")
-	ErrHeaderMalformed = errors.New("4105-请求头中 Authorization 格式有误")
+	ErrTokenCreate                  = errors.New("4100-创建令牌失败")
+	ErrTokenExpired                 = errors.New("4101-令牌已过期")
+	ErrTokenMalformed               = errors.New("4102-请求令牌格式有误")
+	ErrTokenInvalid                 = errors.New("4103-请求令牌无效")
+	ErrHeaderEmpty                  = errors.New("4104-需要认证才能访问！")
+	ErrHeaderMalformed              = errors.New("4105-请求头中 Authorization 格式有误")
+	ErrTokenExpiredMaxRefresh error = errors.New("4106-令牌已过最大刷新时间")
 )
 
 type JWT struct {
@@ -129,4 +131,40 @@ func (jwt *JWT) ParserToken(c *gin.Context) (*Claims, error) {
 	}
 
 	return nil, ErrTokenInvalid
+}
+
+// RefreshToken 更新 Token，用以提供 refresh token 接口
+func (jwt *JWT) RefreshToken(c *gin.Context) (string, int64, error) {
+	// 1. 从 Header 里获取 token
+	tokenString, parseErr := jwt.getTokenFromHeader(c)
+	if parseErr != nil {
+		return "", 0, parseErr
+	}
+
+	// 2. 调用 jwt 库解析用户传参的 Token
+	token, err := jwt.parseTokenString(tokenString)
+	if err != nil {
+		validationErr, ok := err.(*jwtPkg.ValidationError)
+		if !ok || validationErr.Errors != jwtPkg.ValidationErrorExpired {
+			return "", 0, err
+		}
+	}
+
+	// 3. 解析 JWTCustomClaims 的数据
+	claims := token.Claims.(*Claims)
+
+	// 4. 检查是否过了『最大允许刷新的时间』
+	expireAt := jwt.expireAtTime()
+	x := tools.TimeNowByTimezone().Add(-jwt.MaxRefresh).Unix()
+	if claims.IssuedAt > x {
+		claims.StandardClaims.ExpiresAt = expireAt
+		newToken, err := jwt.createToken(*claims)
+		if err != nil {
+			return "", 0, ErrTokenCreate
+		}
+
+		return newToken, expireAt, nil
+	}
+
+	return "", 0, ErrTokenExpiredMaxRefresh
 }

@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go-es/app/api/handle"
 	"go-es/common/ctxdata"
-	"go-es/common/errorx"
+	"go-es/common/responsex"
 	"go-es/internal/services"
 )
 
@@ -18,9 +18,9 @@ func (h *UserHandle) Info(ctx *gin.Context) {
 	s := services.User{}
 	data, err := s.Info(uid)
 	if err != nil {
-		errorx.Error(ctx, err)
+		responsex.Error(ctx, err)
 		return
 	}
 
-	errorx.Success(ctx, data)
+	responsex.Success(ctx, data)
 }

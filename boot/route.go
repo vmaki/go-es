@@ -2,7 +2,7 @@ package boot
 
 import (
 	"go-es/app/api"
-	"go-es/common/errorx"
+	"go-es/common/responsex"
 	"go-es/internal/middlewares"
 	"net/http"
 	"strings"
@@ -34,8 +34,8 @@ func setup404Handler(router *gin.Engine) {
 
 		if strings.Contains(accept, "text/html") {
 			ctx.String(http.StatusNotFound, "页面返回 404")
-		} else {
-			errorx.Failure(ctx, http.StatusNotFound, errorx.NewResponse(404, "请确认 url 和请求方法是否正确", nil))
 		}
+
+		responsex.Failure(ctx, http.StatusNotFound, responsex.NewResponse(404, "请确认 url 和请求方法是否正确", nil))
 	})
 }

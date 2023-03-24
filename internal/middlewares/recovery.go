@@ -1,7 +1,7 @@
 package middlewares
 
 import (
-	"go-es/common/errorx"
+	"go-es/common/responsex"
 	"go-es/internal/pkg/logger"
 	"net"
 	"net/http/httputil"
@@ -53,7 +53,7 @@ func Recovery() gin.HandlerFunc {
 					zap.Stack("stacktrace"),                    // 调用堆栈信息
 				)
 
-				errorx.SysError(ctx)
+				responsex.SysError(ctx)
 			}
 		}()
 
