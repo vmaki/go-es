@@ -2,6 +2,7 @@ package boot
 
 import (
 	"go-es/app/api"
+	"go-es/common/errorx"
 	"go-es/internal/middlewares"
 	"net/http"
 	"strings"
@@ -28,15 +29,13 @@ func registerGlobalMiddleWare(router *gin.Engine) {
 
 // setup404Handler 404路由处理器
 func setup404Handler(router *gin.Engine) {
-	router.NoRoute(func(c *gin.Context) {
-		acceptString := c.GetHeader("Accept")
-		if strings.Contains(acceptString, "text/html") {
-			c.String(http.StatusNotFound, "页面返回 404")
+	router.NoRoute(func(ctx *gin.Context) {
+		accept := ctx.GetHeader("Accept")
+
+		if strings.Contains(accept, "text/html") {
+			ctx.String(http.StatusNotFound, "页面返回 404")
 		} else {
-			c.JSON(http.StatusNotFound, gin.H{
-				"code": 404,
-				"msg":  "路由未定义，请确认 url 和请求方法是否正确。",
-			})
+			errorx.Failure(ctx, http.StatusNotFound, errorx.NewResponse(404, "请确认 url 和请求方法是否正确", nil))
 		}
 	})
 }

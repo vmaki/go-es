@@ -1,0 +1,22 @@
+package errorx
+
+import (
+	"github.com/gin-gonic/gin"
+	"net/http"
+)
+
+func JSON(ctx *gin.Context, data *Response) {
+	ctx.JSON(http.StatusOK, data)
+}
+
+func Success(ctx *gin.Context, data interface{}) {
+	JSON(ctx, NewResponse(200, "success", data))
+}
+
+func Failure(ctx *gin.Context, status int, data *Response) {
+	ctx.AbortWithStatusJSON(status, data)
+}
+
+func SysError(ctx *gin.Context) {
+	Failure(ctx, http.StatusInternalServerError, NewResponse(500, "服务器内部错误，请稍后再试", nil))
+}

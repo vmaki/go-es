@@ -3,8 +3,7 @@ package v1
 import (
 	"github.com/gin-gonic/gin"
 	"go-es/app/api/handle"
-	"go-es/config"
-	"net/http"
+	"go-es/common/errorx"
 )
 
 type TestHandle struct {
@@ -12,17 +11,11 @@ type TestHandle struct {
 }
 
 func (h *TestHandle) Index(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, gin.H{
-		"code": 0,
-		"msg":  "Hello " + config.GlobalConfig.Name,
-	})
+	errorx.Success(ctx, nil)
 }
 
 func (h *TestHandle) SysErr(ctx *gin.Context) {
 	panic("报错了")
 
-	ctx.JSON(http.StatusOK, gin.H{
-		"code": 0,
-		"msg":  "Hello " + config.GlobalConfig.Name,
-	})
+	errorx.Success(ctx, nil)
 }

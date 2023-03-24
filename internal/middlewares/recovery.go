@@ -1,9 +1,9 @@
 package middlewares
 
 import (
+	"go-es/common/errorx"
 	"go-es/internal/pkg/logger"
 	"net"
-	"net/http"
 	"net/http/httputil"
 	"os"
 	"strings"
@@ -53,11 +53,7 @@ func Recovery() gin.HandlerFunc {
 					zap.Stack("stacktrace"),                    // 调用堆栈信息
 				)
 
-				// 返回 500 状态码
-				ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-					"code": 500,
-					"msg":  "服务器内部错误，请稍后再试",
-				})
+				errorx.SysError(ctx)
 			}
 		}()
 
