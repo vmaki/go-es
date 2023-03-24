@@ -1,6 +1,7 @@
 package boot
 
 import (
+	"go-es/app/middlewares"
 	"go-es/routes"
 	"net/http"
 	"strings"
@@ -8,23 +9,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// SetupRoute 路由初始化
 func SetupRoute(router *gin.Engine) {
-
-	// 注册全局中间件
 	registerGlobalMiddleWare(router)
 
 	//  注册 API 路由
 	routes.RegisterAPIRoutes(router)
 
-	//  配置 404 路由
 	setup404Handler(router)
 }
 
 func registerGlobalMiddleWare(router *gin.Engine) {
 	router.Use(
-		gin.Logger(),
-		gin.Recovery(),
+		middlewares.Logger(),
+		middlewares.Recovery(),
 	)
 }
 

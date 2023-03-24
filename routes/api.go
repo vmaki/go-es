@@ -15,5 +15,14 @@ func RegisterAPIRoutes(r *gin.Engine) {
 				"msg":  "Hello " + config.GlobalConfig.Name,
 			})
 		})
+
+		v1.GET("/500", func(c *gin.Context) {
+			panic("报错了")
+
+			c.JSON(http.StatusOK, gin.H{
+				"code": 0,
+				"msg":  "Hello " + config.GlobalConfig.Name,
+			})
+		})
 	}
 }

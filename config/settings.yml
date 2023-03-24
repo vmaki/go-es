@@ -3,3 +3,11 @@ mode: local
 port: 7001
 debug: true
 timezone: Asia/Shanghai
+log:
+  level: debug
+  type: single
+  filename: storage/logs/logs.log
+  maxSize: 64
+  maxAge: 7
+  maxBackup: 5
+  compress: false

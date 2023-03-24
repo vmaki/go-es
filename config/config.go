@@ -8,4 +8,5 @@ type Config struct {
 	Port     int
 	Debug    bool
 	Timezone string
+	Log      LogConfig
 }
