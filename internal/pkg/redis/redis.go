@@ -48,8 +48,8 @@ func (rds Server) Ping() error {
 	return err
 }
 
-func (rds Server) Set(key string, value interface{}, expiration int64) bool {
-	if err := rds.Client.Set(rds.Context, key, value, time.Duration(expiration)*time.Second).Err(); err != nil {
+func (rds Server) Set(key string, value interface{}, expireTime int64) bool {
+	if err := rds.Client.Set(rds.Context, key, value, time.Duration(expireTime)*time.Second).Err(); err != nil {
 		logger.ErrorString("Redis", "Set", err.Error())
 		return false
 	}
