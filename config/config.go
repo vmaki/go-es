@@ -9,4 +9,5 @@ type Config struct {
 	Debug    bool
 	Timezone string
 	Log      LogConfig
+	DataBase DataBaseConfig
 }

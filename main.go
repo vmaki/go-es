@@ -15,6 +15,7 @@ func init() {
 
 	boot.SetupConfig(env)
 	boot.SetLogger()
+	boot.SetupDB()
 }
 
 func main() {
