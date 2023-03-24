@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/fsnotify/fsnotify v1.6.0
 	github.com/gin-gonic/gin v1.9.0
-	github.com/golang-jwt/jwt v3.2.2+incompatible
+	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/redis/go-redis/v9 v9.0.2
 	github.com/spf13/cast v1.5.0
 	github.com/spf13/viper v1.15.0

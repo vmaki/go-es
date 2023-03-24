@@ -3,7 +3,7 @@ package jwt
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
-	jwtPkg "github.com/golang-jwt/jwt"
+	jwtPkg "github.com/golang-jwt/jwt/v4"
 	"go-es/config"
 	"go-es/internal/pkg/logger"
 	"go-es/internal/tools"
