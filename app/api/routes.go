@@ -3,6 +3,7 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 	v1 "go-es/app/api/handle/v1"
+	"go-es/app/middlewares"
 )
 
 func RegisterAPIRoutes(r *gin.Engine) {
@@ -14,6 +15,13 @@ func RegisterAPIRoutes(r *gin.Engine) {
 
 			authGroup.POST("/register", handle.Register)
 			authGroup.POST("/login", handle.Login)
+		}
+
+		userGroup := apiV1.Group("/user", middlewares.AuthJWT())
+		{
+			handle := new(v1.UserHandle)
+
+			userGroup.GET("/", handle.Info)
 		}
 
 		// 测试接口

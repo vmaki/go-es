@@ -30,3 +30,7 @@ func Failure(ctx *gin.Context, status int, data *Response) {
 func SysError(ctx *gin.Context) {
 	Failure(ctx, http.StatusInternalServerError, NewResponse(500, "服务器内部错误，请稍后再试", nil))
 }
+
+func Unauthorized(ctx *gin.Context, msg string) {
+	Failure(ctx, http.StatusOK, NewResponse(4005, msg, nil))
+}

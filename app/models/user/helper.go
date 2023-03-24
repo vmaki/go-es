@@ -13,3 +13,8 @@ func GetByPhone(phone string) (userModel *User) {
 	database.GlobalDB.Where("phone = ?", phone).First(&userModel)
 	return
 }
+
+func Info(id int64) (userModel User) {
+	database.GlobalDB.Where("id", id).First(&userModel)
+	return
+}
