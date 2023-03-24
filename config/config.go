@@ -11,4 +11,5 @@ type Config struct {
 	Log      LogConfig
 	DataBase DataBaseConfig
 	JWT      JWTConfig
+	Redis    RedisConfig
 }

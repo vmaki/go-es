@@ -26,3 +26,9 @@ jwt:
   secret: zBqYyQrPNaIUsnRhsGtHLivjqiMjBVLS
   expireTime: 3600
   maxRefreshTime: 86400
+redis:
+  host: localhost
+  port: 36379
+  username:
+  password: G62m50oigInC30sf
+  database: 0
