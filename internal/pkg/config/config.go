@@ -5,6 +5,9 @@ import (
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
 	"go-es/config"
+	"go-es/internal/pkg/logger"
+	"go.uber.org/zap"
+	"time"
 )
 
 var v *viper.Viper
@@ -38,9 +41,10 @@ func LoadConfig(env string) {
 	// 监控配置文件，变更时重新加载，无需重启
 	v.WatchConfig()
 	v.OnConfigChange(func(in fsnotify.Event) {
-		//  todo 需要记录日志
+		logger.WarnString("配置文件", "重新加载", time.Now().Format("2006-01-02 15:04:05"))
+
 		if err := v.Unmarshal(config.GlobalConfig); err != nil {
-			// todo 需要记录日志
+			logger.Error("配置文件", zap.Error(err))
 		}
 	})
 }
