@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	make2 "go-es/internal/cmd/make"
+	"go-es/internal/cmd/make"
 )
 
 var CmdMake = &cobra.Command{
@@ -12,8 +12,8 @@ var CmdMake = &cobra.Command{
 
 func init() {
 	CmdMake.AddCommand(
-		make2.CmdMakeModel,
-		make2.CmdMakeDto,
-		make2.CmdMakeAPIHandle,
+		make.CmdMakeModel,
+		make.CmdMakeDto,
+		make.CmdMakeAPIHandle,
 	)
 }

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	jwtPkg "github.com/golang-jwt/jwt/v4"
-	"go-es/config"
+	"go-es/global"
 	"go-es/internal/pkg/logger"
 	"go-es/internal/tools"
 	"strings"
@@ -28,8 +28,8 @@ type JWT struct {
 
 func NewJWT() *JWT {
 	return &JWT{
-		SignKey:    []byte(config.GlobalConfig.JWT.Secret),
-		MaxRefresh: time.Duration(config.GlobalConfig.JWT.MaxRefreshTime) * time.Second,
+		SignKey:    []byte(global.GConfig.JWT.Secret),
+		MaxRefresh: time.Duration(global.GConfig.JWT.MaxRefreshTime) * time.Second,
 	}
 }
 
@@ -37,7 +37,7 @@ type Claims struct {
 	UserID       int64 `json:"user_id"`
 	ExpireAtTime int64 `json:"expire_time"`
 
-	jwtPkg.StandardClaims
+	jwtPkg.RegisteredClaims
 }
 
 // createToken 创建Token，内部使用
@@ -47,10 +47,13 @@ func (jwt *JWT) createToken(claims Claims) (string, error) {
 }
 
 // expireAtTime 过期时间
-func (jwt *JWT) expireAtTime() int64 {
-	expire := time.Duration(config.GlobalConfig.JWT.ExpireTime) * time.Second
+func (jwt *JWT) expireAtTime() time.Time {
+	timezone := tools.TimeNowByTimezone()
 
-	return tools.TimeNowByTimezone().Add(expire).Unix()
+	expireTime := global.GConfig.JWT.ExpireTime
+
+	expire := time.Duration(expireTime) * time.Minute
+	return timezone.Add(expire)
 }
 
 // GenerateToken 生成Token，在登录成功时调用
@@ -59,13 +62,13 @@ func (jwt *JWT) GenerateToken(userID int64) (string, int64) {
 
 	claims := Claims{
 		userID,
-		expireAtTime,
+		expireAtTime.Unix(),
 
-		jwtPkg.StandardClaims{
-			NotBefore: tools.TimeNowByTimezone().Unix(), // 签名生效时间
-			IssuedAt:  tools.TimeNowByTimezone().Unix(), // 首次签名时间（后续刷新 Token 不会更新）
-			ExpiresAt: expireAtTime,                     // 签名过期时间
-			Issuer:    config.GlobalConfig.Name,         // 签名颁发者
+		jwtPkg.RegisteredClaims{
+			NotBefore: jwtPkg.NewNumericDate(tools.TimeNowByTimezone()), // 签名生效时间
+			IssuedAt:  jwtPkg.NewNumericDate(tools.TimeNowByTimezone()), // 首次签名时间（后续刷新 Token 不会更新）
+			ExpiresAt: jwtPkg.NewNumericDate(expireAtTime),              // 签名过期时间
+			Issuer:    global.GConfig.Name,                              // 签名颁发者
 		},
 	}
 
@@ -75,7 +78,7 @@ func (jwt *JWT) GenerateToken(userID int64) (string, int64) {
 		return "", 0
 	}
 
-	return token, expireAtTime
+	return token, expireAtTime.Unix()
 }
 
 // getTokenFromHeader 使用 jwtPkg.ParseWithClaims 解析 Token
@@ -156,14 +159,14 @@ func (jwt *JWT) RefreshToken(c *gin.Context) (string, int64, error) {
 	// 4. 检查是否过了『最大允许刷新的时间』
 	expireAt := jwt.expireAtTime()
 	x := tools.TimeNowByTimezone().Add(-jwt.MaxRefresh).Unix()
-	if claims.IssuedAt > x {
-		claims.StandardClaims.ExpiresAt = expireAt
+	if claims.IssuedAt.Unix() > x {
+		claims.RegisteredClaims.ExpiresAt = jwtPkg.NewNumericDate(expireAt)
 		newToken, err := jwt.createToken(*claims)
 		if err != nil {
 			return "", 0, ErrTokenCreate
 		}
 
-		return newToken, expireAt, nil
+		return newToken, expireAt.Unix(), nil
 	}
 
 	return "", 0, ErrTokenExpiredMaxRefresh

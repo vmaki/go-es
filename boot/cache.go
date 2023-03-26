@@ -2,12 +2,12 @@ package boot
 
 import (
 	"fmt"
-	"go-es/config"
+	"go-es/global"
 	"go-es/internal/pkg/cache"
 )
 
 func SetupCache() {
-	cf := config.GlobalConfig.Redis
+	cf := global.GConfig.Redis
 
 	rds := cache.NewRedisStore(
 		fmt.Sprintf("%v:%v", cf.Host, cf.Port),

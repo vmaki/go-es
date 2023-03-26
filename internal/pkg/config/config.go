@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
-	"go-es/config"
+	"go-es/global"
 	"go-es/internal/pkg/logger"
 	"go.uber.org/zap"
 	"time"
@@ -34,7 +34,7 @@ func LoadConfig(env string) {
 	}
 
 	// 加载配置
-	if err := v.Unmarshal(config.GlobalConfig); err != nil {
+	if err := v.Unmarshal(global.GConfig); err != nil {
 		panic("启动失败，err: 加载配置失败，" + err.Error())
 	}
 
@@ -43,7 +43,7 @@ func LoadConfig(env string) {
 	v.OnConfigChange(func(in fsnotify.Event) {
 		logger.WarnString("配置文件", "重新加载", time.Now().Format("2006-01-02 15:04:05"))
 
-		if err := v.Unmarshal(config.GlobalConfig); err != nil {
+		if err := v.Unmarshal(global.GConfig); err != nil {
 			logger.Error("配置文件", zap.Error(err))
 		}
 	})

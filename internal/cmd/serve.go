@@ -8,7 +8,7 @@ import (
 	"go-es/app/cronx"
 	"go-es/app/mqueue"
 	"go-es/boot"
-	"go-es/config"
+	"go-es/global"
 	"go-es/internal/pkg/asynq"
 	"go-es/internal/pkg/logger"
 	"go-es/internal/tools"
@@ -34,8 +34,9 @@ func runWeb(cmd *cobra.Command, args []string) {
 
 	r := gin.New()
 	boot.SetupRoute(r)
+
 	server := http.Server{
-		Addr:    ":" + cast.ToString(config.GlobalConfig.Port),
+		Addr:    ":" + cast.ToString(global.GConfig.Port),
 		Handler: r,
 	}
 
@@ -93,8 +94,7 @@ func runWeb(cmd *cobra.Command, args []string) {
 
 	<-quit // 在此阻塞
 
-	log.Println("开始关闭服务")
-
+	// 开始关闭服务
 	if err := server.Shutdown(ctx); err != nil {
 		log.Fatal("服务关闭失败")
 	}

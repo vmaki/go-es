@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"go-es/app/models/user"
-	"go-es/config"
+	"go-es/global"
 	"go-es/internal/pkg/database"
 	"go-es/internal/pkg/logger"
 	"gorm.io/driver/mysql"
@@ -13,7 +13,7 @@ import (
 )
 
 func SetupDB() {
-	cf := config.GlobalConfig.DataBase
+	cf := global.GConfig.DataBase
 
 	var dialector gorm.Dialector
 
