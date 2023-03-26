@@ -15,10 +15,6 @@ type Auth struct {
 
 // Register 注册
 func (s *Auth) Register(req *dto.AuthRegisterReq) (*dto.AuthRegisterResp, error) {
-	if isExist := user.IsPhoneExist(req.Phone); isExist {
-		return nil, responsex.NewResponse(4002, "用户已存在", nil)
-	}
-
 	data := &user.User{
 		Nickname: common.MaskPhone(req.Phone),
 		Phone:    req.Phone,

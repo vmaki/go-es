@@ -3,6 +3,7 @@ package dto
 import (
 	"github.com/thedevsaddam/govalidator"
 	"go-es/common/requestx"
+	_ "go-es/internal/validators"
 )
 
 type AuthRegisterReq struct {
@@ -12,7 +13,7 @@ type AuthRegisterReq struct {
 
 func (s *AuthRegisterReq) Generate(data interface{}) error {
 	rules := govalidator.MapData{
-		"phone":    []string{"required", "digits:11"},
+		"phone":    []string{"required", "digits:11", "not_exists:users,phone"},
 		"password": []string{"required"},
 	}
 
@@ -20,6 +21,7 @@ func (s *AuthRegisterReq) Generate(data interface{}) error {
 		"phone": []string{
 			"required:手机号为必填项",
 			"digits:手机号长度必须为 11 位的数字",
+			"not_exists:该手机已注册可直接登录",
 		},
 		"password": []string{
 			"required:密码为必填项",
