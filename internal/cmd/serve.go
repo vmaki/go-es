@@ -11,6 +11,7 @@ import (
 	"go-es/config"
 	"go-es/internal/pkg/asynq"
 	"go-es/internal/pkg/logger"
+	"go-es/internal/tools"
 	"log"
 	"net/http"
 	"os"
@@ -66,24 +67,26 @@ func runWeb(cmd *cobra.Command, args []string) {
 		}
 	}()
 
-	// 定时任务
-	go func() {
-		c := cronx.NewCron()
-		c.Register()
-
+	if !tools.IsLocal() {
+		// 定时任务
 		go func() {
-			c.Start()
-		}()
+			c := cronx.NewCron()
+			c.Register()
 
-		for {
-			select {
-			case <-ctx.Done():
-				log.Println("关闭定时任务")
-				c.C.Stop()
-				return
+			go func() {
+				c.Start()
+			}()
+
+			for {
+				select {
+				case <-ctx.Done():
+					log.Println("关闭定时任务")
+					c.C.Stop()
+					return
+				}
 			}
-		}
-	}()
+		}()
+	}
 
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
@@ -98,7 +101,11 @@ func runWeb(cmd *cobra.Command, args []string) {
 
 	channel()
 
-	time.Sleep(time.Second * 5)
+	if !tools.IsLocal() {
+		time.Sleep(time.Second * 1)
+	} else {
+		time.Sleep(time.Second * 5)
+	}
 
 	log.Println("服务关闭成功，正在退出...")
 }
