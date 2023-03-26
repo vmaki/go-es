@@ -10,7 +10,7 @@ import (
 var (
 	once   sync.Once
 	Client *asynq.Client
-	Srv    *asynq.Server
+	Server *asynq.Server
 )
 
 func ConnectAsynq(address string, username string, password string, db int) {
@@ -19,7 +19,7 @@ func ConnectAsynq(address string, username string, password string, db int) {
 	once.Do(func() {
 		Client = asynq.NewClient(r)
 
-		Srv = asynq.NewServer(
+		Server = asynq.NewServer(
 			r,
 			asynq.Config{
 				Concurrency: 10,

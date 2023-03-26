@@ -49,7 +49,7 @@ func runWeb(cmd *cobra.Command, args []string) {
 
 	// 延迟任务
 	go func() {
-		aq := asynq.Srv
+		aq := asynq.Server
 		tasks := mqueue.NewMQueue(context.Background()).Register()
 
 		go func() {
@@ -68,8 +68,8 @@ func runWeb(cmd *cobra.Command, args []string) {
 		}
 	}()
 
+	// 定时任务，但是本地环境就不启动了
 	if !tools.IsLocal() {
-		// 定时任务
 		go func() {
 			c := cronx.NewCron()
 			c.Register()
