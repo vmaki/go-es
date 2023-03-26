@@ -3,7 +3,6 @@ package logger
 import (
 	"context"
 	"errors"
-	"go-es/global"
 	"go-es/internal/tools"
 	"path/filepath"
 	"runtime"
@@ -24,7 +23,7 @@ type GormLogger struct {
 // NewGormLogger 外部调用, 实例化一个 GormLogger 对象
 func NewGormLogger() GormLogger {
 	return GormLogger{
-		ZapLogger:     global.GLog,            // 使用全局的 logger.Logger 对象
+		ZapLogger:     GLog,                   // 使用全局的 logger.Logger 对象
 		SlowThreshold: 200 * time.Millisecond, // 慢查询阈值，单位为千分之一秒
 	}
 }

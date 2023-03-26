@@ -2,7 +2,6 @@ package logger
 
 import (
 	"fmt"
-	"go-es/global"
 	"go-es/internal/tools"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -12,6 +11,8 @@ import (
 	"time"
 )
 
+var GLog *zap.Logger
+
 func InitLogger(level, logType, filename string, maxSize, maxBackup, maxAge int, compress bool) {
 	logLevel := new(zapcore.Level)
 	if err := logLevel.UnmarshalText([]byte(level)); err != nil {
@@ -20,7 +21,7 @@ func InitLogger(level, logType, filename string, maxSize, maxBackup, maxAge int,
 
 	writeSyncer := getLogWriter(logType, filename, maxSize, maxBackup, maxAge, compress)
 
-	global.GLog = zap.New(
+	GLog = zap.New(
 		zapcore.NewCore(getEncoder(), writeSyncer, logLevel),
 		zap.AddCaller(),                   // 调用文件和行号，内部使用 runtime.Caller
 		zap.AddCallerSkip(1),              // 封装了一层，调用文件去除一层(runtime.Caller(1))
@@ -28,7 +29,7 @@ func InitLogger(level, logType, filename string, maxSize, maxBackup, maxAge int,
 	)
 
 	// 将自定义的 logger 替换为全局的 logger，这样 zap.L().Fatal() 调用时，就会使用我们自定的 Logger
-	zap.ReplaceGlobals(global.GLog)
+	zap.ReplaceGlobals(GLog)
 }
 
 // getEncoder 设置日志存储格式
