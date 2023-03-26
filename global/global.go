@@ -10,6 +10,6 @@ import (
 var (
 	GConfig   = new(config.Config)
 	GDB       *gorm.DB
+	GLog      *zap.Logger
 	GVA_REDIS *redis.Client
-	GVA_LOG   *zap.Logger
 )
