@@ -13,7 +13,10 @@ import (
 	"go-es/internal/pkg/logger"
 	"log"
 	"net/http"
-	"sync"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 )
 
 var CmdServe = &cobra.Command{
@@ -24,22 +27,19 @@ var CmdServe = &cobra.Command{
 }
 
 func runWeb(cmd *cobra.Command, args []string) {
+	ctx, channel := context.WithCancel(context.Background())
+
 	gin.SetMode(gin.ReleaseMode)
 
 	r := gin.New()
 	boot.SetupRoute(r)
-
 	server := http.Server{
 		Addr:    ":" + cast.ToString(config.GlobalConfig.Port),
 		Handler: r,
 	}
 
-	wg := sync.WaitGroup{}
-	wg.Add(3)
-
+	// 主服务
 	go func() {
-		defer wg.Done()
-
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("server listen err:%s", err)
 		}
@@ -47,22 +47,58 @@ func runWeb(cmd *cobra.Command, args []string) {
 
 	// 延迟任务
 	go func() {
-		defer wg.Done()
-
+		aq := asynq.Srv
 		tasks := mqueue.NewMQueue(context.Background()).Register()
-		if err := asynq.Srv.Run(tasks); err != nil {
-			logger.ErrorString("CMD", "serve", err.Error())
+
+		go func() {
+			if err := aq.Run(tasks); err != nil {
+				logger.ErrorString("CMD", "serve", err.Error())
+			}
+		}()
+
+		for {
+			select {
+			case <-ctx.Done():
+				log.Println("关闭延迟任务")
+				aq.Shutdown()
+				return
+			}
 		}
 	}()
 
 	// 定时任务
 	go func() {
-		defer wg.Done()
-
 		c := cronx.NewCron()
 		c.Register()
-		c.Start()
+
+		go func() {
+			c.Start()
+		}()
+
+		for {
+			select {
+			case <-ctx.Done():
+				log.Println("关闭定时任务")
+				c.C.Stop()
+				return
+			}
+		}
 	}()
 
-	wg.Wait()
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+
+	<-quit // 在此阻塞
+
+	log.Println("开始关闭服务")
+
+	if err := server.Shutdown(ctx); err != nil {
+		log.Fatal("服务关闭失败")
+	}
+
+	channel()
+
+	time.Sleep(time.Second * 5)
+
+	log.Println("服务关闭成功，正在退出...")
 }
