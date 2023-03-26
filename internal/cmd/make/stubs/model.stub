@@ -2,7 +2,7 @@ package {{PackageName}}
 
 import (
 	"{{AppName}}/app/models"
-	"{{AppName}}/internal/pkg/database"
+	"{{AppName}}/global"
 )
 
 type {{StructName}} struct {
@@ -14,17 +14,17 @@ type {{StructName}} struct {
 }
 
 func ({{VariableName}} *{{StructName}}) Create() {
-    database.GlobalDB.Create(&{{VariableName}})
+    global.GDB.Create(&{{VariableName}})
 }
 
 func ({{VariableName}} *{{StructName}}) Save() (rowsAffected int64) {
-    result := database.GlobalDB.Save(&{{VariableName}})
+    result := global.GDB.Save(&{{VariableName}})
 
     return result.RowsAffected
 }
 
 func ({{VariableName}} *{{StructName}}) Delete() (rowsAffected int64) {
-    result := database.GlobalDB.Delete(&{{VariableName}})
+    result := global.GDB.Delete(&{{VariableName}})
 
     return result.RowsAffected
 }

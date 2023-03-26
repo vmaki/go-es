@@ -3,7 +3,6 @@ package boot
 import (
 	"errors"
 	"fmt"
-	"go-es/app/models/user"
 	"go-es/global"
 	"go-es/internal/pkg/database"
 	"go-es/internal/pkg/logger"
@@ -42,5 +41,5 @@ func SetupDB() {
 	database.SqlDB.SetMaxIdleConns(cf.MaxIdleConnections)
 	database.SqlDB.SetConnMaxLifetime(time.Duration(cf.MaxLifeSeconds) * time.Second)
 
-	database.GlobalDB.AutoMigrate(&user.User{}) // 自动迁移
+	// global.GDB.AutoMigrate(&user.User{}) // 自动迁移
 }

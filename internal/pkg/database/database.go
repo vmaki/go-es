@@ -3,19 +3,19 @@ package database
 import (
 	"database/sql"
 	"fmt"
+	"go-es/global"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
 
 var (
-	GlobalDB *gorm.DB
-	SqlDB    *sql.DB
+	SqlDB *sql.DB
 )
 
 func Connect(dbConfig gorm.Dialector, _logger logger.Interface) {
 	var err error
-	GlobalDB, err = gorm.Open(dbConfig, &gorm.Config{
+	global.GDB, err = gorm.Open(dbConfig, &gorm.Config{
 		Logger: _logger,
 	})
 
@@ -25,7 +25,7 @@ func Connect(dbConfig gorm.Dialector, _logger logger.Interface) {
 	}
 
 	// 获取底层的 sqlDB
-	SqlDB, err = GlobalDB.DB()
+	SqlDB, err = global.GDB.DB()
 	if err != nil {
 		fmt.Println(err.Error())
 	}

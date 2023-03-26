@@ -1,9 +1,8 @@
 package user
 
 import (
-	"fmt"
 	"go-es/app/models"
-	"go-es/internal/pkg/database"
+	"go-es/global"
 )
 
 type User struct {
@@ -18,6 +17,5 @@ type User struct {
 
 // Create 创建用户
 func (u *User) Create() {
-	fmt.Println(u)
-	database.GlobalDB.Create(&u)
+	global.GDB.Create(&u)
 }

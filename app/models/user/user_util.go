@@ -1,20 +1,22 @@
 package user
 
-import "go-es/internal/pkg/database"
+import (
+	"go-es/global"
+)
 
 func IsPhoneExist(phone string) bool {
 	var count int64
-	database.GlobalDB.Model(User{}).Where("phone = ?", phone).Count(&count)
+	global.GDB.Model(User{}).Where("phone = ?", phone).Count(&count)
 
 	return count > 0
 }
 
 func GetByPhone(phone string) (userModel *User) {
-	database.GlobalDB.Where("phone = ?", phone).First(&userModel)
+	global.GDB.Where("phone = ?", phone).First(&userModel)
 	return
 }
 
 func Info(id int64) (userModel User) {
-	database.GlobalDB.Where("id", id).First(&userModel)
+	global.GDB.Where("id", id).First(&userModel)
 	return
 }
