@@ -1,0 +1,30 @@
+package {{PackageName}}
+
+import (
+	"{{AppName}}/app/models"
+	"{{AppName}}/internal/pkg/database"
+)
+
+type {{StructName}} struct {
+    models.BaseModel
+
+    // TODO(） Put fields in here
+
+    models.CommonTimestampsField
+}
+
+func ({{VariableName}} *{{StructName}}) Create() {
+    database.GlobalDB.Create(&{{VariableName}})
+}
+
+func ({{VariableName}} *{{StructName}}) Save() (rowsAffected int64) {
+    result := database.GlobalDB.Save(&{{VariableName}})
+
+    return result.RowsAffected
+}
+
+func ({{VariableName}} *{{StructName}}) Delete() (rowsAffected int64) {
+    result := database.GlobalDB.Delete(&{{VariableName}})
+
+    return result.RowsAffected
+}
