@@ -19,6 +19,11 @@ func Warning(msg string) {
 	colorOut(msg, "yellow")
 }
 
+func Exit(msg string) {
+	Error(msg)
+	os.Exit(1)
+}
+
 // colorOut 内部使用，设置高亮颜色
 func colorOut(message, color string) {
 	_, _ = fmt.Fprintln(os.Stdout, ansi.Color(message, color))

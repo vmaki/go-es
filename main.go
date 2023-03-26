@@ -1,22 +1,13 @@
 package main
 
 import (
-	"context"
 	"flag"
-	"github.com/gin-gonic/gin"
-	"github.com/spf13/cast"
-	"go-es/app/cronx"
-	"go-es/app/mqueue"
+	"fmt"
+	"github.com/spf13/cobra"
 	"go-es/boot"
-	"go-es/config"
-	"go-es/internal/pkg/asynq"
-	"go-es/internal/pkg/logger"
-	"log"
-	"net/http"
+	"go-es/internal/cmd"
+	"go-es/internal/pkg/console"
 	"os"
-	"os/signal"
-	"syscall"
-	"time"
 )
 
 func init() {
@@ -24,12 +15,6 @@ func init() {
 	flag.StringVar(&env, "env", "", "加载 .env 文件，如 --env=testing 加载的是 .env.testing 文件")
 	flag.Parse()
 
-	boot.SetupConfig(env)
-	boot.SetLogger()
-	boot.SetupDB()
-	boot.SetupRedis()
-	boot.SetupCache()
-	boot.SetupAsynq()
 }
 
 // @title           go-es 的 API 文档
@@ -44,49 +29,34 @@ func init() {
 // @externalDocs.description  OpenAPI
 // @externalDocs.url          https://swagger.io/resources/open-api/
 func main() {
-	gin.SetMode(gin.ReleaseMode)
+	var rootCmd = &cobra.Command{
+		Use:   "GoEs",
+		Short: "A simple forum project",
+		Long:  `Default will run "serve" command, you can use "-h" flag to see all subcommands`,
 
-	r := gin.New()
-
-	boot.SetupRoute(r)
-
-	server := http.Server{
-		Addr:    ":" + cast.ToString(config.GlobalConfig.Port),
-		Handler: r,
+		PersistentPreRun: func(command *cobra.Command, args []string) {
+			boot.SetupConfig(cmd.Env)
+			boot.SetLogger()
+			boot.SetupDB()
+			boot.SetupRedis()
+			boot.SetupCache()
+			boot.SetupAsynq()
+		},
 	}
 
-	go func() {
-		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatalf("server listen err:%s", err)
-		}
-	}()
+	// 注册子命令
+	rootCmd.AddCommand(
+		cmd.CmdServe,
+	)
 
-	// 延迟任务
-	go func() {
-		tasks := mqueue.NewMQueue(context.Background()).Register()
-		if err := asynq.Srv.Run(tasks); err != nil {
-			logger.ErrorString("CMD", "serve", err.Error())
-		}
-	}()
+	// 配置默认运行 Web 服务
+	cmd.RegisterDefaultCmd(rootCmd, cmd.CmdServe)
 
-	// 定时任务
-	go func() {
-		c := cronx.NewCron()
-		c.Register()
-		c.Start()
-	}()
+	// 注册全局参数，--env
+	cmd.RegisterGlobalFlags(rootCmd)
 
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-
-	// 在此阻塞
-	<-quit
-
-	ctx, channel := context.WithTimeout(context.Background(), 5*time.Second)
-
-	defer channel()
-	if err := server.Shutdown(ctx); err != nil {
-		log.Fatal("server shutdown error")
+	// 执行主命令
+	if err := rootCmd.Execute(); err != nil {
+		console.Exit(fmt.Sprintf("Failed to run app with %v: %s", os.Args, err.Error()))
 	}
-	log.Println("server exiting...")
 }
