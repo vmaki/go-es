@@ -12,6 +12,14 @@ type UserHandle struct {
 	handle.BaseAPIController
 }
 
+// Info
+// @Tags      User
+// @Summary   获取用户信息
+// @Security  ApiKeyAuth
+// @accept    application/json
+// @Produce   application/json
+// @Success   200   {object}  responsex.Response{data=dto.UserInfoResp}
+// @Router    /user [get]
 func (h *UserHandle) Info(ctx *gin.Context) {
 	uid := ctxdata.CurrentUID(ctx)
 

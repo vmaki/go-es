@@ -45,6 +45,12 @@ definitions:
         description: jwt-token
         type: string
     type: object
+  dto.UserInfoResp:
+    properties:
+      nickname:
+        description: 昵称
+        type: string
+    type: object
   responsex.Response:
     properties:
       code:
@@ -78,7 +84,7 @@ paths:
         - application/json
       responses:
         "200":
-          description: jwt-token, 过期时间
+          description: OK
           schema:
             allOf:
               - $ref: '#/definitions/responsex.Response'
@@ -97,7 +103,7 @@ paths:
         - application/json
       responses:
         "200":
-          description: jwt-token, 过期时间
+          description: OK
           schema:
             allOf:
               - $ref: '#/definitions/responsex.Response'
@@ -125,7 +131,7 @@ paths:
         - application/json
       responses:
         "200":
-          description: jwt-token, 过期时间
+          description: OK
           schema:
             allOf:
               - $ref: '#/definitions/responsex.Response'
@@ -136,6 +142,27 @@ paths:
       summary: 注册
       tags:
         - Auth
+  /user:
+    get:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+              - $ref: '#/definitions/responsex.Response'
+              - properties:
+                  data:
+                    $ref: '#/definitions/dto.UserInfoResp'
+                type: object
+      security:
+        - ApiKeyAuth: [ ]
+      summary: 获取用户信息
+      tags:
+        - User
 securityDefinitions:
   BasicAuth:
     type: basic

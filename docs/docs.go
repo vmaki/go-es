@@ -41,7 +41,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "jwt-token, 过期时间",
+                        "description": "OK",
                         "schema": {
                             "allOf": [
                                 {
@@ -80,7 +80,7 @@ const docTemplate = `{
                 "summary": "刷新 token",
                 "responses": {
                     "200": {
-                        "description": "jwt-token, 过期时间",
+                        "description": "OK",
                         "schema": {
                             "allOf": [
                                 {
@@ -125,7 +125,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "jwt-token, 过期时间",
+                        "description": "OK",
                         "schema": {
                             "allOf": [
                                 {
@@ -136,6 +136,45 @@ const docTemplate = `{
                                     "properties": {
                                         "data": {
                                             "$ref": "#/definitions/dto.AuthRegisterResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/user": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "获取用户信息",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responsex.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.UserInfoResp"
                                         }
                                     }
                                 }
@@ -208,6 +247,15 @@ const docTemplate = `{
                 },
                 "access_token": {
                     "description": "jwt-token",
+                    "type": "string"
+                }
+            }
+        },
+        "dto.UserInfoResp": {
+            "type": "object",
+            "properties": {
+                "nickname": {
+                    "description": "昵称",
                     "type": "string"
                 }
             }
