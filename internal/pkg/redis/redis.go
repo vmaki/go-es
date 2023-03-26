@@ -16,13 +16,15 @@ type RedisClient struct {
 
 var (
 	once        sync.Once
-	GlobalRedis *RedisClient
+	redisClient *RedisClient
 )
 
-func NewRedisClient(address string, username string, password string, db int) {
+func NewRedisClient(address string, username string, password string, db int) *RedisClient {
 	once.Do(func() {
-		GlobalRedis = Connect(address, username, password, db)
+		redisClient = Connect(address, username, password, db)
 	})
+
+	return redisClient
 }
 
 func Connect(address string, username string, password string, db int) *RedisClient {

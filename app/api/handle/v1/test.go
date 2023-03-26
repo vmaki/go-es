@@ -6,8 +6,8 @@ import (
 	"go-es/app/api/handle"
 	"go-es/app/mqueue/tasks"
 	"go-es/common/responsex"
+	"go-es/global"
 	"go-es/internal/pkg/cache"
-	"go-es/internal/pkg/redis"
 )
 
 type TestHandle struct {
@@ -15,7 +15,7 @@ type TestHandle struct {
 }
 
 func (h *TestHandle) Index(ctx *gin.Context) {
-	redis.GlobalRedis.Set("f1", "asasasasas", 64)
+	global.GRedis.Set("f1", "asasasasas", 64)
 	cache.Set("f2", "asasasasas", 64)
 	responsex.Success(ctx, nil)
 }
