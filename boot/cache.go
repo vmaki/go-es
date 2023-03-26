@@ -16,5 +16,5 @@ func SetupCache() {
 		cf.Database,
 	)
 
-	cache.NewService(rds)
+	cache.NewCacheClient(rds)
 }

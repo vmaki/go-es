@@ -4,51 +4,51 @@ import (
 	"sync"
 )
 
-type CacheService struct {
+type CacheClient struct {
 	Store IStore
 }
 
 var (
-	once  sync.Once
-	Cache *CacheService
+	once        sync.Once
+	cacheClient *CacheClient
 )
 
-func NewService(store IStore) {
+func NewCacheClient(store IStore) {
 	once.Do(func() {
-		Cache = &CacheService{
+		cacheClient = &CacheClient{
 			Store: store,
 		}
 	})
 }
 
 func Set(key string, value interface{}, expireTime int64) {
-	Cache.Store.Set(key, value, expireTime)
+	cacheClient.Store.Set(key, value, expireTime)
 }
 
 func Get(key string) string {
-	return Cache.Store.Get(key)
+	return cacheClient.Store.Get(key)
 }
 
 func Has(key string) bool {
-	return Cache.Store.Has(key)
+	return cacheClient.Store.Has(key)
 }
 
 func Incr(key string) bool {
-	return Cache.Store.Incr(key)
+	return cacheClient.Store.Incr(key)
 }
 
 func IncrBy(key string, value int64) bool {
-	return Cache.Store.IncrBy(key, value)
+	return cacheClient.Store.IncrBy(key, value)
 }
 
 func Decr(key string) bool {
-	return Cache.Store.Decr(key)
+	return cacheClient.Store.Decr(key)
 }
 
 func DecrBy(key string, value int64) bool {
-	return Cache.Store.DecrBy(key, value)
+	return cacheClient.Store.DecrBy(key, value)
 }
 
 func Del(key string) bool {
-	return Cache.Store.Del(key)
+	return cacheClient.Store.Del(key)
 }
