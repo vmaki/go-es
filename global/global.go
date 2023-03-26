@@ -1,11 +1,11 @@
 package global
 
 import (
-	"go-es/config"
+	"go-es/internal/pkg/redis"
 	"gorm.io/gorm"
 )
 
 var (
-	GConfig = new(config.Config)
-	GDB     *gorm.DB
+	GDB    *gorm.DB
+	GRedis *redis.RedisClient
 )

@@ -1,19 +1,19 @@
 package cache
 
 import (
-	"go-es/global"
+	"go-es/config"
 	"go-es/internal/pkg/redis"
 )
 
 type RedisStore struct {
 	KeyPrefix   string
-	RedisClient *redis.Server
+	RedisClient *redis.RedisClient
 }
 
 func NewRedisStore(address string, username string, password string, db int) *RedisStore {
 	rs := &RedisStore{}
 	rs.RedisClient = redis.Connect(address, username, password, db)
-	rs.KeyPrefix = global.GConfig.Name + ":cache:"
+	rs.KeyPrefix = config.GlobalConfig.Name + ":cache:"
 
 	return rs
 }

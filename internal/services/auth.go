@@ -5,7 +5,7 @@ import (
 	"go-es/common"
 	"go-es/common/encryption"
 	"go-es/common/responsex"
-	"go-es/global"
+	"go-es/config"
 	"go-es/internal/pkg/jwt"
 	"go-es/internal/services/dto"
 )
@@ -22,7 +22,7 @@ func (s *Auth) Register(req *dto.AuthRegisterReq) (*dto.AuthRegisterResp, error)
 	data := &user.User{
 		Nickname: common.MaskPhone(req.Phone),
 		Phone:    req.Phone,
-		Password: encryption.Md5(req.Password, global.GConfig.Name),
+		Password: encryption.Md5(req.Password, config.GlobalConfig.Name),
 	}
 	data.Create()
 
@@ -45,7 +45,7 @@ func (s *Auth) Login(req *dto.AuthLoginReq) (*dto.AuthLoginResp, error) {
 		return nil, responsex.NewResponse(4003, "用户尚未注册", nil)
 	}
 
-	if data.Password != encryption.Md5(req.Password, global.GConfig.Name) {
+	if data.Password != encryption.Md5(req.Password, config.GlobalConfig.Name) {
 		return nil, responsex.NewResponse(4004, "账户或密码错误", nil)
 	}
 

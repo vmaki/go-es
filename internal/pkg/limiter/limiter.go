@@ -1,7 +1,7 @@
 package limiter
 
 import (
-	"go-es/global"
+	"go-es/config"
 	"go-es/internal/pkg/logger"
 	"go-es/internal/pkg/redis"
 	"go-es/internal/tools"
@@ -32,7 +32,7 @@ func CheckRate(ctx *gin.Context, key string, formatted string) (limiterPkg.Conte
 
 	// 初始化
 	store, err := limiterRedis.NewStoreWithOptions(redis.GlobalRedis.Client, limiterPkg.StoreOptions{
-		Prefix: global.GConfig.Name + ":limiter",
+		Prefix: config.GlobalConfig.Name + ":limiter",
 	})
 	if err != nil {
 		logger.LogIf(err)

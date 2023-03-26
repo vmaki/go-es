@@ -8,7 +8,7 @@ import (
 	"go-es/app/cronx"
 	"go-es/app/mqueue"
 	"go-es/boot"
-	"go-es/global"
+	"go-es/config"
 	"go-es/internal/pkg/asynq"
 	"go-es/internal/pkg/logger"
 	"go-es/internal/tools"
@@ -36,7 +36,7 @@ func runWeb(cmd *cobra.Command, args []string) {
 	boot.SetupRoute(r)
 
 	server := http.Server{
-		Addr:    ":" + cast.ToString(global.GConfig.Port),
+		Addr:    ":" + cast.ToString(config.GlobalConfig.Port),
 		Handler: r,
 	}
 

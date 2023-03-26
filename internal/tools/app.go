@@ -2,12 +2,12 @@ package tools
 
 import (
 	"github.com/gin-gonic/gin"
-	"go-es/global"
+	"go-es/config"
 	"net"
 )
 
 func IsLocal() bool {
-	return global.GConfig.Mode == "local"
+	return config.GlobalConfig.Mode == "local"
 }
 
 func GetClientIP(ctx *gin.Context) string {

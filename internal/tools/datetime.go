@@ -2,7 +2,7 @@ package tools
 
 import (
 	"fmt"
-	"go-es/global"
+	"go-es/config"
 	"time"
 )
 
@@ -11,6 +11,6 @@ func MicrosecondsStr(elapsed time.Duration) string {
 }
 
 func TimeNowByTimezone() time.Time {
-	chinaTimezone, _ := time.LoadLocation(global.GConfig.Timezone)
+	chinaTimezone, _ := time.LoadLocation(config.GlobalConfig.Timezone)
 	return time.Now().In(chinaTimezone)
 }

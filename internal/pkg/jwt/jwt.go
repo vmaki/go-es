@@ -4,7 +4,7 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	jwtPkg "github.com/golang-jwt/jwt/v4"
-	"go-es/global"
+	"go-es/config"
 	"go-es/internal/pkg/logger"
 	"go-es/internal/tools"
 	"strings"
@@ -28,8 +28,8 @@ type JWT struct {
 
 func NewJWT() *JWT {
 	return &JWT{
-		SignKey:    []byte(global.GConfig.JWT.Secret),
-		MaxRefresh: time.Duration(global.GConfig.JWT.MaxRefreshTime) * time.Second,
+		SignKey:    []byte(config.GlobalConfig.JWT.Secret),
+		MaxRefresh: time.Duration(config.GlobalConfig.JWT.MaxRefreshTime) * time.Second,
 	}
 }
 
@@ -50,7 +50,7 @@ func (jwt *JWT) createToken(claims Claims) (string, error) {
 func (jwt *JWT) expireAtTime() time.Time {
 	timezone := tools.TimeNowByTimezone()
 
-	expireTime := global.GConfig.JWT.ExpireTime
+	expireTime := config.GlobalConfig.JWT.ExpireTime
 
 	expire := time.Duration(expireTime) * time.Minute
 	return timezone.Add(expire)
@@ -68,7 +68,7 @@ func (jwt *JWT) GenerateToken(userID int64) (string, int64) {
 			NotBefore: jwtPkg.NewNumericDate(tools.TimeNowByTimezone()), // 签名生效时间
 			IssuedAt:  jwtPkg.NewNumericDate(tools.TimeNowByTimezone()), // 首次签名时间（后续刷新 Token 不会更新）
 			ExpiresAt: jwtPkg.NewNumericDate(expireAtTime),              // 签名过期时间
-			Issuer:    global.GConfig.Name,                              // 签名颁发者
+			Issuer:    config.GlobalConfig.Name,                         // 签名颁发者
 		},
 	}
 
