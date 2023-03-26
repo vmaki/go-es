@@ -1,0 +1,25 @@
+package v1
+
+import (
+	"{{AppName}}/app/api/handle"
+	"{{AppName}}/common/requestx"
+	"{{AppName}}/common/responsex"
+
+	"github.com/gin-gonic/gin"
+)
+
+type {{StructNamePlural}}Handle struct {
+	handle.BaseAPIController
+}
+
+func (h *{{StructNamePlural}}Handle) Index(ctx *gin.Context) {
+	/*req := dto.{{StructNamePlural}}Req{}
+	if err := requestx.Validate(ctx, &req); err != nil {
+		responsex.Error(ctx, err)
+		return
+	}*/
+
+	// TODO code
+
+	responsex.Success(ctx, nil)
+}
