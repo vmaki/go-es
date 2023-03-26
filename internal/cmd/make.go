@@ -15,5 +15,6 @@ func init() {
 		make.CmdMakeModel,
 		make.CmdMakeDto,
 		make.CmdMakeAPIHandle,
+		make.CmdMakeMigration,
 	)
 }
