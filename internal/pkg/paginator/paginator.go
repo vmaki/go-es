@@ -111,7 +111,7 @@ func (p *Paginator) getTotalPage() int {
 // getCurrentPage 返回当前页码
 func (p *Paginator) getCurrentPage() int {
 	// 优先取用户请求的 page
-	page := cast.ToInt(p.ctx.Query("per_page"))
+	page := cast.ToInt(p.ctx.Query("page"))
 	if page <= 0 {
 		// 默认为 1
 		page = 1
