@@ -82,8 +82,7 @@ func (p *Paginator) getTotalCount() int64 {
 }
 
 func (p *Paginator) getPageSize(pageSize int) int {
-	// 优先使用请求 per_page 参数
-	queryPeerage := p.ctx.Query("pageSize")
+	queryPeerage := p.ctx.Query("page-size")
 	if len(queryPeerage) > 0 {
 		pageSize = cast.ToInt(queryPeerage)
 	}
@@ -124,9 +123,9 @@ func (p *Paginator) getCurrentPage() int {
 	}
 
 	// 请求页数大于总页数，返回总页数
-	if page > p.TotalPage {
+	/*if page > p.TotalPage {
 		return p.TotalPage
-	}
+	}*/
 
 	return page
 }
