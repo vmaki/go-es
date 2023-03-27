@@ -1,0 +1,61 @@
+version: '3'
+
+services:
+  # mysql
+  go-es-mysql:
+    image: mysql/mysql-server:8.0.28
+    container_name: go-es-mysql
+    # restart: always
+    privileged: true
+    environment:
+      - TZ=Asia/Shanghai
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE=go-es
+    command:
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+      --explicit_defaults_for_timestamp=true
+      --lower_case_table_names=1
+    ports:
+      - "13306:3306"
+    volumes:
+      - ./docker/tmp/mysql:/var/lib/mysql
+    networks:
+      - go-es_dev_net
+
+  # redis
+  go-es-redis:
+    image: redis:6.2.5
+    container_name: go-es-redis
+    # restart: always
+    privileged: true
+    environment:
+      TZ: Asia/Shanghai
+    ports:
+      - "16379:6379"
+    volumes:
+      - ./docker/tmp/redis:/data:rw
+    command: "redis-server --requirepass 123456  --appendonly yes"
+    networks:
+      - go-es_dev_net
+
+  # asynqmon asynq 延迟队列、定时队列的 webui
+  go-es-asynqmon:
+    image: hibiken/asynqmon:latest
+    container_name: go-es-asynqmon
+    # restart: always
+    ports:
+      - "18080:8080"
+    command:
+      - '--redis-addr=go-es-redis:6379'
+      - '--redis-password=123456'
+    depends_on:
+      - go-es-redis
+    networks:
+      - go-es_dev_net
+
+networks:
+  go-es_dev_net:
+    driver: bridge
+

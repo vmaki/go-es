@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  # 应用
+  go-es-app:
+    image: go-es
+    container_name: go-es-app
+    # restart: always
+    privileged: true
+    environment:
+      TZ: Asia/Shanghai
+      GOPROXY: https://goproxy.cn,direct
+    networks:
+      - go-es_dev_net
+
+  # 网关
+  go-es-nginx-gateway:
+    image: nginx:1.21.5
+    container_name: go-es-nginx-gateway
+    # restart: always
+    privileged: true
+    environment:
+      - TZ=Asia/Shanghai
+    ports:
+      - "7009:8081"
+    volumes:
+      - ./docker/deploy/nginx/conf.d:/etc/nginx/conf.d
+      - ./docker/tmp/nginx:/var/log/nginx
+    depends_on:
+      - go-es-app
+    networks:
+      - go-es_dev_net
+
+networks:
+  go-es_dev_net:
+    driver: bridge
+

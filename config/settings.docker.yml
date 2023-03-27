@@ -1,0 +1,34 @@
+name: go-es
+mode: prod
+port: 7003
+debug: false
+timezone: Asia/Shanghai
+log:
+  level: error
+  type: single
+  filename: storage/logs/logs.log
+  maxSize: 64
+  maxAge: 7
+  maxBackup: 5
+  compress: false
+database:
+  driver: mysql
+  host: go-es-mysql
+  port: 3306
+  database: go-es
+  username: root
+  password: 123456
+  charset: utf8mb4
+  maxOpenConnections: 100
+  maxIdleConnections: 25
+  maxLifeSeconds: 300
+jwt:
+  secret: zBqYyQrPNaIUsnRhsGtHLivjqiMjBVLS
+  expireTime: 3600
+  maxRefreshTime: 86400
+redis:
+  host: go-es-redis
+  port: 6379
+  username:
+  password: 123456
+  database: 0
