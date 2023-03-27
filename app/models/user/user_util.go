@@ -2,8 +2,8 @@ package user
 
 import (
 	"github.com/gin-gonic/gin"
-	"go-es/common/paginator"
 	"go-es/global"
+	"go-es/internal/pkg/paginator"
 )
 
 func GetByPhone(phone string) (userModel *User) {

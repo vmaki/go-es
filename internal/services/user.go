@@ -3,8 +3,8 @@ package services
 import (
 	"github.com/gin-gonic/gin"
 	"go-es/app/models/user"
-	"go-es/common/paginator"
 	"go-es/common/responsex"
+	"go-es/internal/pkg/paginator"
 	"go-es/internal/services/dto"
 )
 

@@ -2,7 +2,7 @@ package responsex
 
 import (
 	"github.com/gin-gonic/gin"
-	"go-es/common/paginator"
+	"go-es/internal/pkg/paginator"
 	"net/http"
 )
 
