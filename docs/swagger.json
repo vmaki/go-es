@@ -253,11 +253,34 @@
         }
       }
     },
+    "responsex.ResCode": {
+      "type": "integer",
+      "enum": [
+        500,
+        404,
+        429,
+        40000,
+        40001,
+        40002,
+        40003,
+        40004
+      ],
+      "x-enum-varnames": [
+        "ErrSystem",
+        "ErrNotFound",
+        "ErrTooManyRequests",
+        "ErrBadRequest",
+        "ErrBadValidation",
+        "ErrJWT",
+        "ErrDataExist",
+        "ErrDataNotExist"
+      ]
+    },
     "responsex.Response": {
       "type": "object",
       "properties": {
         "code": {
-          "type": "integer"
+          "$ref": "#/definitions/responsex.ResCode"
         },
         "data": {},
         "msg": {

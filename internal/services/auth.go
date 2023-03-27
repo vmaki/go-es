@@ -27,7 +27,7 @@ func (s *Auth) Register(req *dto.AuthRegisterReq) (*dto.AuthRegisterResp, error)
 	data.Create()
 
 	if data.ID < 1 {
-		return nil, responsex.NewResponse(500, "注册失败", nil)
+		return nil, responsex.NewResponseErr(responsex.ErrSystem, "注册失败，请稍候重试")
 	}
 
 	token, expireTime := jwt.NewJWT().GenerateToken(data.ID)
@@ -42,11 +42,11 @@ func (s *Auth) Register(req *dto.AuthRegisterReq) (*dto.AuthRegisterResp, error)
 func (s *Auth) Login(req *dto.AuthLoginReq) (*dto.AuthLoginResp, error) {
 	data := user.GetByPhone(req.Phone)
 	if data == nil {
-		return nil, responsex.NewResponse(4003, "用户尚未注册", nil)
+		return nil, responsex.NewResponseErr(responsex.ErrDataNotExist, "用户尚未注册")
 	}
 
 	if data.Password != encryption.Md5(req.Password, config.GlobalConfig.Name) {
-		return nil, responsex.NewResponse(4004, "账户或密码错误", nil)
+		return nil, responsex.NewResponseErr(responsex.ErrBadValidation, "密码或账户有误")
 	}
 
 	token, expireTime := jwt.NewJWT().GenerateToken(data.ID)

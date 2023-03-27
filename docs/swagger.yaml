@@ -51,10 +51,30 @@ definitions:
         description: 昵称
         type: string
     type: object
+  responsex.ResCode:
+    enum:
+      - 500
+      - 404
+      - 429
+      - 40000
+      - 40001
+      - 40002
+      - 40003
+      - 40004
+    type: integer
+    x-enum-varnames:
+      - ErrSystem
+      - ErrNotFound
+      - ErrTooManyRequests
+      - ErrBadRequest
+      - ErrBadValidation
+      - ErrJWT
+      - ErrDataExist
+      - ErrDataNotExist
   responsex.Response:
     properties:
       code:
-        type: integer
+        $ref: '#/definitions/responsex.ResCode'
       data: { }
       msg:
         type: string

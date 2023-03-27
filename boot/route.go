@@ -43,6 +43,6 @@ func setup404Handler(router *gin.Engine) {
 			ctx.String(http.StatusNotFound, "页面返回 404")
 		}
 
-		responsex.Failure(ctx, http.StatusNotFound, responsex.NewResponse(404, "请确认 url 和请求方法是否正确", nil))
+		responsex.NotFound(ctx)
 	})
 }

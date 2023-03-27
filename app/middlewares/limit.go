@@ -1,13 +1,11 @@
 package middlewares
 
 import (
+	"github.com/gin-gonic/gin"
+	"github.com/spf13/cast"
 	"go-es/common/responsex"
 	"go-es/internal/pkg/limiter"
 	"go-es/internal/pkg/logger"
-	"net/http"
-
-	"github.com/gin-gonic/gin"
-	"github.com/spf13/cast"
 )
 
 // LimitIP 全局限流中间件，针对 IP 进行限流
@@ -58,7 +56,7 @@ func limitHandler(ctx *gin.Context, key string, limit string) bool {
 
 	// 超额
 	if rate.Reached {
-		responsex.Failure(ctx, http.StatusTooManyRequests, responsex.NewResponse(http.StatusTooManyRequests, "请求过于频繁", nil))
+		responsex.TooManyRequests(ctx)
 		return false
 	}
 

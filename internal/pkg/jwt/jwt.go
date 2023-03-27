@@ -12,13 +12,13 @@ import (
 )
 
 var (
-	ErrTokenCreate                  = errors.New("4100-创建令牌失败")
-	ErrTokenExpired                 = errors.New("4101-令牌已过期")
-	ErrTokenMalformed               = errors.New("4102-请求令牌格式有误")
-	ErrTokenInvalid                 = errors.New("4103-请求令牌无效")
-	ErrHeaderEmpty                  = errors.New("4104-需要认证才能访问！")
-	ErrHeaderMalformed              = errors.New("4105-请求头中 Authorization 格式有误")
-	ErrTokenExpiredMaxRefresh error = errors.New("4106-令牌已过最大刷新时间")
+	ErrTokenCreate                  = errors.New("创建令牌失败")
+	ErrTokenExpired                 = errors.New("令牌已过期")
+	ErrTokenMalformed               = errors.New("请求令牌格式有误")
+	ErrTokenInvalid                 = errors.New("请求令牌无效")
+	ErrHeaderEmpty                  = errors.New("需要认证才能访问！")
+	ErrHeaderMalformed              = errors.New("请求头中 Authorization 格式有误")
+	ErrTokenExpiredMaxRefresh error = errors.New("令牌已过最大刷新时间")
 )
 
 type JWT struct {

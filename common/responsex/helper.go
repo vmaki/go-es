@@ -10,8 +10,33 @@ func JSON(ctx *gin.Context, data *Response) {
 	ctx.JSON(http.StatusOK, data)
 }
 
+func Failure(ctx *gin.Context, status int, data *Response) {
+	ctx.AbortWithStatusJSON(status, data)
+}
+
+// Success 请求成功
 func Success(ctx *gin.Context, data interface{}) {
 	JSON(ctx, NewResponse(200, "success", data))
+}
+
+// SysError 请求失败-未知错误
+func SysError(ctx *gin.Context) {
+	Failure(ctx, http.StatusInternalServerError, NewResponseErr(ErrSystem))
+}
+
+// NotFound 请求失败-404
+func NotFound(ctx *gin.Context) {
+	Failure(ctx, http.StatusNotFound, NewResponseErr(ErrNotFound))
+}
+
+// TooManyRequests 请求失败-请求过于频繁
+func TooManyRequests(ctx *gin.Context) {
+	Failure(ctx, http.StatusTooManyRequests, NewResponseErr(ErrTooManyRequests))
+}
+
+// Unauthorized 请求失败-未授权
+func Unauthorized(ctx *gin.Context, msg string) {
+	Failure(ctx, http.StatusOK, NewResponseErr(ErrJWT, msg))
 }
 
 // Error 自定义错误
@@ -22,18 +47,6 @@ func Error(ctx *gin.Context, err error) {
 	default:
 		SysError(ctx)
 	}
-}
-
-func Failure(ctx *gin.Context, status int, data *Response) {
-	ctx.AbortWithStatusJSON(status, data)
-}
-
-func SysError(ctx *gin.Context) {
-	Failure(ctx, http.StatusInternalServerError, NewResponse(500, "服务器内部错误，请稍后再试", nil))
-}
-
-func Unauthorized(ctx *gin.Context, msg string) {
-	Failure(ctx, http.StatusOK, NewResponse(4005, msg, nil))
 }
 
 type Paginate struct {

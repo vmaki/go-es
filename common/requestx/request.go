@@ -8,7 +8,7 @@ import (
 
 func Validate(ctx *gin.Context, req IRequest) error {
 	if err := ctx.ShouldBind(req); err != nil {
-		return responsex.NewResponse(4000, "请求解析错误，请确认请求格式是否正确。上传文件请使用 multipart 标头，参数请使用 JSON 格式", nil)
+		return responsex.NewResponseErr(responsex.ErrBadRequest)
 	}
 
 	// 表单验证
@@ -37,7 +37,7 @@ func GoValidate(data interface{}, rules govalidator.MapData, messages govalidato
 			break
 		}
 
-		return responsex.NewResponse(4001, str, nil)
+		return responsex.NewResponseErr(responsex.ErrBadValidation, str)
 	}
 
 	return nil
