@@ -3,9 +3,9 @@ package v1
 import (
 	"github.com/gin-gonic/gin"
 	"go-es/app/api/handle"
+	"go-es/common/jwt"
 	"go-es/common/requestx"
 	"go-es/common/responsex"
-	"go-es/internal/pkg/jwt"
 	"go-es/internal/services"
 	"go-es/internal/services/dto"
 )

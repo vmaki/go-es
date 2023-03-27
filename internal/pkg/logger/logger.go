@@ -2,7 +2,6 @@ package logger
 
 import (
 	"fmt"
-	"go-es/internal/tools"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
@@ -13,16 +12,16 @@ import (
 
 var GLog *zap.Logger
 
-func InitLogger(level, logType, filename string, maxSize, maxBackup, maxAge int, compress bool) {
+func InitLogger(level, logType, filename string, maxSize, maxBackup, maxAge int, compress bool, isLocal bool) {
 	logLevel := new(zapcore.Level)
 	if err := logLevel.UnmarshalText([]byte(level)); err != nil {
 		panic("日志初始化错误，日志级别设置有误。请修改 config/log.go 文件中的 log.level 配置项")
 	}
 
-	writeSyncer := getLogWriter(logType, filename, maxSize, maxBackup, maxAge, compress)
+	writeSyncer := getLogWriter(logType, filename, maxSize, maxBackup, maxAge, compress, isLocal)
 
 	GLog = zap.New(
-		zapcore.NewCore(getEncoder(), writeSyncer, logLevel),
+		zapcore.NewCore(getEncoder(isLocal), writeSyncer, logLevel),
 		zap.AddCaller(),                   // 调用文件和行号，内部使用 runtime.Caller
 		zap.AddCallerSkip(1),              // 封装了一层，调用文件去除一层(runtime.Caller(1))
 		zap.AddStacktrace(zap.ErrorLevel), // Error 时才会显示 stacktrace
@@ -33,7 +32,7 @@ func InitLogger(level, logType, filename string, maxSize, maxBackup, maxAge int,
 }
 
 // getEncoder 设置日志存储格式
-func getEncoder() zapcore.Encoder {
+func getEncoder(isLocal bool) zapcore.Encoder {
 	encoderConfig := zapcore.EncoderConfig{
 		TimeKey:        "time",
 		LevelKey:       "level",
@@ -49,7 +48,7 @@ func getEncoder() zapcore.Encoder {
 		EncodeCaller:   zapcore.ShortCallerEncoder,     // Caller 短格式，如：types/converter.go:17，长格式为绝对路径
 	}
 
-	if tools.IsLocal() {
+	if isLocal {
 		// 终端输出的关键词高亮
 		encoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
 
@@ -67,7 +66,7 @@ func customTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 }
 
 // getLogWriter 日志记录介质
-func getLogWriter(logType, filename string, maxSize, maxBackup, maxAge int, compress bool) zapcore.WriteSyncer {
+func getLogWriter(logType, filename string, maxSize, maxBackup, maxAge int, compress bool, isLocal bool) zapcore.WriteSyncer {
 	// todo 如果配置了按照日期记录日志文件。有问题，不重启无法按日期
 	if logType == "daily" {
 		logName := fmt.Sprintf("%s.log", time.Now().Format("2006-01-02"))
@@ -82,8 +81,9 @@ func getLogWriter(logType, filename string, maxSize, maxBackup, maxAge int, comp
 		MaxAge:     maxAge,
 		Compress:   compress,
 	}
+
 	// 配置输出介质
-	if tools.IsLocal() {
+	if isLocal {
 		// 本地开发终端打印和记录文件
 		return zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), zapcore.AddSync(lumberJackLogger))
 	}

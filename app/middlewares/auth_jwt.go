@@ -1,11 +1,10 @@
 package middlewares
 
 import (
-	"go-es/common/ctxdata"
-	"go-es/common/responsex"
-	"go-es/internal/pkg/jwt"
-
 	"github.com/gin-gonic/gin"
+	"go-es/common/ctxdata"
+	"go-es/common/jwt"
+	"go-es/common/responsex"
 )
 
 func AuthJWT() gin.HandlerFunc {

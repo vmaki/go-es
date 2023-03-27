@@ -4,9 +4,9 @@ import (
 	"go-es/app/models/user"
 	"go-es/common"
 	"go-es/common/encryption"
+	"go-es/common/jwt"
 	"go-es/common/responsex"
 	"go-es/config"
-	"go-es/internal/pkg/jwt"
 	"go-es/internal/services/dto"
 )
 

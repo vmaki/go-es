@@ -4,7 +4,7 @@ import (
 	"go-es/config"
 	"go-es/global"
 	"go-es/internal/pkg/logger"
-	"go-es/internal/tools"
+	"net"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -13,11 +13,11 @@ import (
 )
 
 func GetKeyIP(ctx *gin.Context) string {
-	return tools.GetClientIP(ctx)
+	return getClientIP(ctx)
 }
 
 func GetKeyRouteWithIP(ctx *gin.Context) string {
-	return routeToKeyString(ctx.FullPath()) + "" + tools.GetClientIP(ctx)
+	return routeToKeyString(ctx.FullPath()) + "" + getClientIP(ctx)
 }
 
 // CheckRate 检测请求是否超额
@@ -60,4 +60,22 @@ func routeToKeyString(routeName string) string {
 	routeName = strings.ReplaceAll(routeName, ":", "_")
 
 	return routeName
+}
+
+func getClientIP(ctx *gin.Context) string {
+	clientIP := ctx.Request.RemoteAddr
+
+	if ip := ctx.GetHeader("X-Real-IP"); ip != "" {
+		clientIP = ip
+	} else if ip = ctx.GetHeader("X-Forward-For"); ip != "" {
+		clientIP = ip
+	} else {
+		clientIP, _, _ = net.SplitHostPort(clientIP)
+	}
+
+	if clientIP == "::1" {
+		clientIP = "127.0.0.1"
+	}
+
+	return clientIP
 }

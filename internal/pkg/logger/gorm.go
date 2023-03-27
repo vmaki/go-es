@@ -3,7 +3,7 @@ package logger
 import (
 	"context"
 	"errors"
-	"go-es/internal/tools"
+	"fmt"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -51,6 +51,10 @@ func (l GormLogger) Error(ctx context.Context, str string, args ...interface{}) 
 	l.logger().Sugar().Errorf(str, args...)
 }
 
+func (l GormLogger) microsecondsStr(elapsed time.Duration) string {
+	return fmt.Sprintf("%.3fms", float64(elapsed.Nanoseconds())/1e6)
+}
+
 // Trace 实现 GormLogger.Interface 的 Trace 方法
 func (l GormLogger) Trace(ctx context.Context, begin time.Time, fc func() (string, int64), err error) {
 	elapsed := time.Since(begin) // 获取运行时间
@@ -59,7 +63,7 @@ func (l GormLogger) Trace(ctx context.Context, begin time.Time, fc func() (strin
 	// 通用字段
 	logFields := []zap.Field{
 		zap.String("sql", sql),
-		zap.String("time", tools.MicrosecondsStr(elapsed)),
+		zap.String("time", l.microsecondsStr(elapsed)),
 		zap.Int64("rows", rows),
 	}
 
