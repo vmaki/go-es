@@ -3,7 +3,7 @@ package dto
 import (
 	"github.com/thedevsaddam/govalidator"
 	"go-es/common/requestx"
-	_ "go-es/internal/validators"
+	_ "go-es/internal/govalidator"
 )
 
 type AuthRegisterReq struct {
