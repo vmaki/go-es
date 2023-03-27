@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"github.com/spf13/cobra"
 	"go-es/boot"
@@ -10,24 +9,12 @@ import (
 	"os"
 )
 
-func init() {
-	var env string
-	flag.StringVar(&env, "env", "", "加载 .env 文件，如 --env=testing 加载的是 .env.testing 文件")
-	flag.Parse()
-
-}
-
-// @title           go-es 的 API 文档
+// @title           go-es
 // @version         1.0
 // @description     这是 go-es 的 API 文档
-
-// @host      localhost:7001/api/v1
-// @BasePath  /
-
+// @host      localhost:7001
+// @BasePath  /api/v1
 // @securityDefinitions.basic  BasicAuth
-
-// @externalDocs.description  OpenAPI
-// @externalDocs.url          https://swagger.io/resources/open-api/
 func main() {
 	var rootCmd = &cobra.Command{
 		Use:   "GoEs",
@@ -51,10 +38,8 @@ func main() {
 		cmd.CmdMigrate,
 	)
 
-	// 配置默认运行 Web 服务
-	cmd.RegisterDefaultCmd(rootCmd, cmd.CmdServe)
-	// 注册全局参数，--env
-	cmd.RegisterGlobalFlags(rootCmd)
+	cmd.RegisterDefaultCmd(rootCmd, cmd.CmdServe) // 配置默认运行 Web 服务
+	cmd.RegisterGlobalFlags(rootCmd)              // 注册全局参数，--env
 
 	// 执行主命令
 	if err := rootCmd.Execute(); err != nil {

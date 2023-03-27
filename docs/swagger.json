@@ -2,12 +2,12 @@
   "swagger": "2.0",
   "info": {
     "description": "这是 go-es 的 API 文档",
-    "title": "go-es 的 API 文档",
+    "title": "go-es",
     "contact": {},
     "version": "1.0"
   },
-  "host": "localhost:7001/api/v1",
-  "basePath": "/",
+  "host": "localhost:7001",
+  "basePath": "/api/v1",
   "paths": {
     "/auth/login": {
       "post": {
@@ -270,9 +270,5 @@
     "BasicAuth": {
       "type": "basic"
     }
-  },
-  "externalDocs": {
-    "description": "OpenAPI",
-    "url": "https://swagger.io/resources/open-api/"
   }
 }

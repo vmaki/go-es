@@ -1,4 +1,4 @@
-basePath: /
+basePath: /api/v1
 definitions:
   dto.AuthLoginReq:
     properties:
@@ -59,14 +59,11 @@ definitions:
       msg:
         type: string
     type: object
-externalDocs:
-  description: OpenAPI
-  url: https://swagger.io/resources/open-api/
-host: localhost:7001/api/v1
+host: localhost:7001
 info:
   contact: { }
   description: 这是 go-es 的 API 文档
-  title: go-es 的 API 文档
+  title: go-es
   version: "1.0"
 paths:
   /auth/login:

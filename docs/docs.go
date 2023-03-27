@@ -277,20 +277,16 @@ const docTemplate = `{
         "BasicAuth": {
             "type": "basic"
         }
-    },
-    "externalDocs": {
-        "description": "OpenAPI",
-        "url": "https://swagger.io/resources/open-api/"
     }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:7001/api/v1",
-	BasePath:         "/",
+	Host:             "localhost:7001",
+	BasePath:         "/api/v1",
 	Schemes:          []string{},
-	Title:            "go-es 的 API 文档",
+	Title:            "go-es",
 	Description:      "这是 go-es 的 API 文档",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
