@@ -13,6 +13,10 @@ import (
 type Auth struct {
 }
 
+func NewAuthService() *Auth {
+	return &Auth{}
+}
+
 // Register 注册
 func (s *Auth) Register(req *dto.AuthRegisterReq) (*dto.AuthRegisterResp, error) {
 	data := &user.User{

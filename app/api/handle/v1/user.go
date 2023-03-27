@@ -13,7 +13,7 @@ type UserHandle struct {
 }
 
 func (h *UserHandle) List(ctx *gin.Context) {
-	s := services.User{}
+	s := services.NewUserService()
 	list, pager := s.List(ctx, 10)
 
 	responsex.List(ctx, list, pager)
@@ -30,7 +30,7 @@ func (h *UserHandle) List(ctx *gin.Context) {
 func (h *UserHandle) Info(ctx *gin.Context) {
 	uid := ctxdata.CurrentUID(ctx)
 
-	s := services.User{}
+	s := services.NewUserService()
 	data, err := s.Info(uid)
 	if err != nil {
 		responsex.Error(ctx, err)

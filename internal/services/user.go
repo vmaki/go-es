@@ -11,6 +11,10 @@ import (
 type User struct {
 }
 
+func NewUserService() *User {
+	return &User{}
+}
+
 // List 用户列表
 func (s *User) List(ctx *gin.Context, pageSize int) (users []user.User, paging paginator.Paging) {
 	return user.Paginate(ctx, pageSize)

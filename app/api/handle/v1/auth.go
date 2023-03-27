@@ -29,7 +29,7 @@ func (h *AuthHandle) Register(ctx *gin.Context) {
 		return
 	}
 
-	s := services.Auth{}
+	s := services.NewAuthService()
 	data, err := s.Register(&req)
 	if err != nil {
 		responsex.Error(ctx, err)
@@ -54,7 +54,7 @@ func (h *AuthHandle) Login(ctx *gin.Context) {
 		return
 	}
 
-	s := services.Auth{}
+	s := services.NewAuthService()
 	data, err := s.Login(&req)
 	if err != nil {
 		responsex.Error(ctx, err)
