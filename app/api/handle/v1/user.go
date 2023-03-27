@@ -12,6 +12,13 @@ type UserHandle struct {
 	handle.BaseAPIController
 }
 
+func (h *UserHandle) List(ctx *gin.Context) {
+	s := services.User{}
+	list, pager := s.List(ctx, 10)
+
+	responsex.List(ctx, list, pager)
+}
+
 // Info
 // @Tags      User
 // @Summary   获取用户信息

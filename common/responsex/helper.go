@@ -2,6 +2,7 @@ package responsex
 
 import (
 	"github.com/gin-gonic/gin"
+	"go-es/common/paginator"
 	"net/http"
 )
 
@@ -33,4 +34,18 @@ func SysError(ctx *gin.Context) {
 
 func Unauthorized(ctx *gin.Context, msg string) {
 	Failure(ctx, http.StatusOK, NewResponse(4005, msg, nil))
+}
+
+type Paginate struct {
+	List   interface{}      `json:"list"`
+	Paging paginator.Paging `json:"paging"`
+}
+
+func List(ctx *gin.Context, list interface{}, paging paginator.Paging) {
+	data := Paginate{
+		List:   list,
+		Paging: paging,
+	}
+
+	Success(ctx, data)
 }

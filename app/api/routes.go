@@ -22,7 +22,8 @@ func RegisterAPIRoutes(r *gin.Engine) {
 		{
 			handle := new(v1.UserHandle)
 
-			userGroup.GET("/", handle.Info)
+			userGroup.GET("/", handle.List)
+			userGroup.GET("/info", handle.Info)
 		}
 
 		// 测试接口

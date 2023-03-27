@@ -1,12 +1,19 @@
 package services
 
 import (
+	"github.com/gin-gonic/gin"
 	"go-es/app/models/user"
+	"go-es/common/paginator"
 	"go-es/common/responsex"
 	"go-es/internal/services/dto"
 )
 
 type User struct {
+}
+
+// List 用户列表
+func (s *User) List(ctx *gin.Context, pageSize int) (users []user.User, paging paginator.Paging) {
+	return user.Paginate(ctx, pageSize)
 }
 
 // Info 用户信息
