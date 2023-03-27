@@ -9,7 +9,7 @@ import (
 )
 
 type UserHandle struct {
-	handle.BaseAPIController
+	handle.BaseAPIHandle
 }
 
 func (h *UserHandle) List(ctx *gin.Context) {

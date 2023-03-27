@@ -11,7 +11,7 @@ import (
 )
 
 type TestHandle struct {
-	handle.BaseAPIController
+	handle.BaseAPIHandle
 }
 
 func (h *TestHandle) Index(ctx *gin.Context) {

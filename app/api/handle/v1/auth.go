@@ -11,7 +11,7 @@ import (
 )
 
 type AuthHandle struct {
-	handle.BaseAPIController
+	handle.BaseAPIHandle
 }
 
 // Register
