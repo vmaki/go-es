@@ -1,6 +1,7 @@
 package websocket
 
 import (
+	"fmt"
 	socketio "github.com/googollee/go-socket.io"
 	"log"
 )
@@ -8,6 +9,7 @@ import (
 func Connect(s socketio.Conn) error {
 	s.SetContext("")
 	log.Println("connected:", s.ID())
+	s.Join("UserRoom")
 
 	return nil
 }
@@ -20,15 +22,14 @@ func Disconnect(s socketio.Conn, msg string) {
 	log.Println("closed", msg)
 }
 
-func OnEvent(s socketio.Conn) string {
+func OnBye(s socketio.Conn) {
 	last := s.Context().(string)
-	s.Emit("bye", last)
-	s.Close()
+	s.Emit("bye", s.ID())
+	fmt.Println("最后一条消息：" + last)
 
-	return last
+	_ = s.Close()
 }
 
 func OnNotice(s socketio.Conn, msg string) {
-	log.Println("notice:", msg)
 	s.Emit("reply", "用户"+s.ID()+", "+msg)
 }
