@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"go-es/boot"
+	"go-es/global"
 	"go-es/internal/cmd"
 	"go-es/internal/pkg/console"
 	"os"
@@ -28,6 +29,7 @@ func main() {
 			boot.SetupRedis()
 			boot.SetupCache()
 			boot.SetupAsynq()
+			global.GWebsocket = boot.SetupWebsocket()
 		},
 	}
 

@@ -2,10 +2,11 @@ package socket
 
 import (
 	"github.com/gin-gonic/gin"
-	socketio "github.com/googollee/go-socket.io"
+	"go-es/app/middlewares"
+	"go-es/global"
 )
 
-func RegisterSocketRoutes(r *gin.Engine, ws *socketio.Server) {
-	r.GET("/socket.io/*any", gin.WrapH(ws))
-	r.POST("/socket.io/*any", gin.WrapH(ws))
+func RegisterSocketRoutes(r *gin.Engine) {
+	r.GET("/socket.io/*any", middlewares.GinMiddleware("*"), gin.WrapH(global.GWebsocket))
+	r.POST("/socket.io/*any", middlewares.GinMiddleware("*"), gin.WrapH(global.GWebsocket))
 }

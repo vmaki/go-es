@@ -64,16 +64,15 @@
     var s2 = io("/chat");
 
     socket.on('reply', function (msg) {
-        console.log("草泥马")
         $('#messages').append($('<li>').text(msg));
     });
 
     $('form').submit(function () {
-        s2.emit('msg', $('#m').val(), function (data) {
-            $('#messages').append($('<li>').text('ACK CALLBACK: ' + data));
-        });
-
         socket.emit('notice', $('#m').val());
+
+        s2.emit('msg', $('#m').val(), function (data) {
+            $('#messages').append($('<li>').text('服务器: ' + data));
+        });
 
         $('#m').val('');
         return false;
