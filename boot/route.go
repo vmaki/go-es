@@ -2,9 +2,11 @@ package boot
 
 import (
 	"github.com/gin-gonic/gin"
+	socketio "github.com/googollee/go-socket.io"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"go-es/app/api"
+	"go-es/app/handle/socket"
 	"go-es/common/responsex"
 	_ "go-es/docs"
 	"go-es/internal/middlewares"
@@ -12,12 +14,14 @@ import (
 	"strings"
 )
 
-func SetupRoute(router *gin.Engine) {
+func SetupRoute(router *gin.Engine, ws *socketio.Server) {
 	registerGlobalMiddleWare(router)
 	registerSwagger(router)
 
 	//  注册 API 路由
 	api.RegisterAPIRoutes(router)
+	socket.RegisterSocketRoutes(router, ws)
+	router.StaticFS("/public", http.Dir("/Users/maki/go/src/go-es/public/"))
 
 	setup404Handler(router)
 }

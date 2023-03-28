@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"github.com/gin-gonic/gin"
+	socketio "github.com/googollee/go-socket.io"
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 	"go-es/app/cronx"
@@ -27,13 +28,63 @@ var CmdServe = &cobra.Command{
 	Args:  cobra.NoArgs,
 }
 
+var allowOriginFunc = func(r *http.Request) bool {
+	return true
+}
+
 func runWeb(cmd *cobra.Command, args []string) {
 	ctx, channel := context.WithCancel(context.Background())
 
 	gin.SetMode(gin.ReleaseMode)
 
 	r := gin.New()
-	boot.SetupRoute(r)
+
+	// ----------- websocket start ---------------------------
+	ws := socketio.NewServer(nil)
+
+	// 有新用户链接进来
+	ws.OnConnect("/", func(s socketio.Conn) error {
+		s.SetContext("")
+		log.Println("connected:", s.ID())
+		return nil
+	})
+
+	// 收到用户发来的消息
+	ws.OnEvent("/", "notice", func(s socketio.Conn, msg string) {
+		log.Println("notice:", msg)
+		s.Emit("reply", "have "+msg)
+	})
+
+	// 回复用户
+	ws.OnEvent("/chat", "msg", func(s socketio.Conn, msg string) string {
+		s.SetContext(msg)
+		return "recv " + msg
+	})
+
+	// 离开
+	ws.OnEvent("/", "bye", func(s socketio.Conn) string {
+		last := s.Context().(string)
+		s.Emit("bye", last)
+		s.Close()
+		return last
+	})
+
+	ws.OnError("/", func(s socketio.Conn, e error) {
+		log.Println("meet error:", e)
+	})
+
+	ws.OnDisconnect("/", func(s socketio.Conn, msg string) {
+		log.Println("closed", msg)
+	})
+
+	go func() {
+		if err := ws.Serve(); err != nil {
+			log.Fatalf("socketio listen error: %s\n", err)
+		}
+	}()
+	// ----------- websocket end ---------------------------
+
+	boot.SetupRoute(r, ws)
 
 	server := http.Server{
 		Addr:    ":" + cast.ToString(config.GlobalConfig.Port),
@@ -99,6 +150,7 @@ func runWeb(cmd *cobra.Command, args []string) {
 		log.Fatal("服务关闭失败")
 	}
 
+	ws.Close()
 	channel()
 
 	if !tools.IsLocal() {
